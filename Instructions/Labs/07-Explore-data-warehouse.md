@@ -8,7 +8,7 @@ lab:
 
 Azure Synapse Analytics is built on a scalable set capabilities to support enterprise data warehousing; including file-based data analytics in a data lake as well as large-scale relational data warehouses and the data transfer and transformation pipelines used to load them. In this lab, you'll explore how to use a dedicated SQL pool in Azure Synapse Analytics to store and query data in a relational data warehouse.
 
-This lab will take approximately **30** minutes to complete.
+This lab will take approximately **45** minutes to complete.
 
 ## Before you start
 
@@ -89,7 +89,9 @@ In this lab, the data warehouse is hosted in a dedicated SQL pool in Azure Synap
 
 Now that you have explored some of the more important aspects of the data warehouse schema, you're ready to to query the tables and retrieve some data.
 
-### Analyze Internet sales
+### Query fact and dimension tables
+
+Numeric values in a relational data warehouse are stored in fact tables with related dimension tables that you can use to aggregate the data across multiple attributes. This design means that most queries in a relational data warehouse involve aggregating and grouping data (using aggregate functions and GROUP BY clauses) across related tables (using JOIN clauses).
 
 1. On the **Data** page, select the **sql*xxxxxxx*** SQL pool and in its **...** menu, select **New SQL script** > **Empty script**.
 2. When a new **SQL Script 1** tab opens, in its **Properties** pane, change the name of the script to **Analyze Internet Sales** and change the **Result settings per query** to return all rows. Then use the **Publish** button on the toolbar to save the script, and use the **Properties** button (which looks similar to **&#128463;.**) on the right end of the toolbar to close the **Properties** pane so you can see the script pane.
@@ -158,18 +160,143 @@ Now that you have explored some of the more important aspects of the data wareho
 
 8. Publish the script to save it.
 
-### Analyze reseller sales
+### Use ranking functions
+
+Another common requirement when analyzing large volumes of data is to group the data by partitions and determine the *rank* of each entity in the partition based on a  specific metric.
+
+1. Under the existing query, add the following SQL to retrieve sales values for 2022 over partitions based on country/region name:
+
+    ```sql
+    SELECT  g.EnglishCountryRegionName AS Region,
+            ROW_NUMBER() OVER(PARTITION BY g.EnglishCountryRegionName
+                              ORDER BY i.SalesAmount ASC) AS RowNumber,
+            i.SalesOrderNumber AS OrderNo,
+            i.SalesOrderLineNumber AS LineItem,
+            i.SalesAmount AS SalesAmount,
+            SUM(i.SalesAmount) OVER(PARTITION BY g.EnglishCountryRegionName) AS RegionTotal,
+            AVG(i.SalesAmount) OVER(PARTITION BY g.EnglishCountryRegionName) AS RegionAverage
+    FROM FactInternetSales AS i
+    JOIN DimDate AS d ON i.OrderDateKey = d.DateKey
+    JOIN DimCustomer AS c ON i.CustomerKey = c.CustomerKey
+    JOIN DimGeography AS g ON c.GeographyKey = g.GeographyKey
+    WHERE d.CalendarYear = 2022
+    ORDER BY Region;
+    ```
+
+2. Select only the new query code, and use the **&#9655; Run** button to run it. Then review the results, which should look similar to the following table:
+
+    | Region | RowNumber | OrderNo | LineItem | SalesAmount | RegionTotal | RegionAverage |
+    |--|--|--|--|--|--|--|
+    |Australia|1|SO73943|2|2.2900|2172278.7900|375.8918|
+    |Australia|2|SO74100|4|2.2900|2172278.7900|375.8918|
+    |...|...|...|...|...|...|...|
+    |Australia|5779|SO64284|1|2443.3500|2172278.7900|375.8918|
+    |Canada|1|SO66332|2|2.2900|563177.1000|157.8411|
+    |Canada|2|SO68234|2|2.2900|563177.1000|157.8411|
+    |...|...|...|...|...|...|...|
+    |Canada|3568|SO70911|1|2443.3500|563177.1000|157.8411|
+    |France|1|SO68226|3|2.2900|816259.4300|315.4016|
+    |France|2|SO63460|2|2.2900|816259.4300|315.4016|
+    |...|...|...|...|...|...|...|
+    |France|2588|SO69100|1|2443.3500|816259.4300|315.4016|
+    |Germany|1|SO70829|3|2.2900|922368.2100|352.4525|
+    |Germany|2|SO71651|2|2.2900|922368.2100|352.4525|
+    |...|...|...|...|...|...|...|
+    |Germany|2617|SO67908|1|2443.3500|922368.2100|352.4525|
+    |United Kingdom|1|SO66124|3|2.2900|1051560.1000|341.7484|
+    |United Kingdom|2|SO67823|3|2.2900|1051560.1000|341.7484|
+    |...|...|...|...|...|...|...|
+    |United Kingdom|3077|SO71568|1|2443.3500|1051560.1000|341.7484|
+    |United States|1|SO74796|2|2.2900|2905011.1600|289.0270|
+    |United States|2|SO65114|2|2.2900|2905011.1600|289.0270|
+    |...|...|...|...|...|...|...|
+    |United States|10051|SO66863|1|2443.3500|2905011.1600|289.0270|
+
+    Observe the following facts about these results:
+
+    - There's a row for each sales order line item.
+    - The rows are organized in partitions based on the geography where the sale was made.
+    - The rows within each geographical partition are numbered in order of sales amount (from smallest to highest).
+    - For each row, the line item sales amount as well as the regional total and average sales amounts are included.
+
+3. Under the existing queries, add the following code to apply windowing functions within a GROUP BY query and rank the cities in each region based on their total sales amount:
+
+    ```sql
+    SELECT  g.EnglishCountryRegionName AS Region,
+            g.City,
+            SUM(i.SalesAmount) AS CityTotal,
+            SUM(SUM(i.SalesAmount)) OVER(PARTITION BY g.EnglishCountryRegionName) AS RegionTotal,
+            RANK() OVER(PARTITION BY g.EnglishCountryRegionName
+                        ORDER BY SUM(i.SalesAmount) DESC) AS RegionalRank
+    FROM FactInternetSales AS i
+    JOIN DimDate AS d ON i.OrderDateKey = d.DateKey
+    JOIN DimCustomer AS c ON i.CustomerKey = c.CustomerKey
+    JOIN DimGeography AS g ON c.GeographyKey = g.GeographyKey
+    GROUP BY g.EnglishCountryRegionName, g.City
+    ORDER BY Region;
+    ```
+
+4. Select only the new query code, and use the **&#9655; Run** button to run it. Then review the results, and observe the following:
+    - The results include a row for each city, grouped by region.
+    - The total sales (sum of individual sales amounts) is calculated for each city
+    - The regional sales total (the sum of the sum of sales amounts for each city in the region) is calculated based on the regional partition.
+    - The rank for each city within its regional partition is calculated by ordering the total sales amount per city in descending order.
+
+5. Publish the updated script to save the changes.
+
+> **Tip**: ROW_NUMBER and RANK are examples of ranking functions available in Transact-SQL. For more details, see the [Ranking Functions](https://docs.microsoft.com/sql/t-sql/functions/ranking-functions-transact-sql) reference in the Transact-SQL language documentation.
+
+### Retrieve an approximate count
+
+When exploring very large volumes of data, queries can take significant time and resources to run. Often, data analysis doesn't require absolutely precise values - a comparison of approximate values may be sufficient.
+
+1. Under the existing queries, add the following code to retrieve the number of sales orders for each calendar year:
+
+    ```sql
+    SELECT d.CalendarYear AS CalendarYear,
+        COUNT(DISTINCT i.SalesOrderNumber) AS Orders
+    FROM FactInternetSales AS i
+    JOIN DimDate AS d ON i.OrderDateKey = d.DateKey
+    GROUP BY d.CalendarYear
+    ORDER BY CalendarYear;
+    ```
+
+2. Select only the new query code, and use the **&#9655; Run** button to run it. Then review the output that is returned:
+    - On the **Results** tab under the query, view the order counts for each year.
+    - On the **Messages** tab, view the total execution time for the query.
+3. Modify the query as follows, to return an approximate count for each year. Then re-run the query.
+
+    ```sql
+    SELECT d.CalendarYear AS CalendarYear,
+        APPROX_COUNT_DISTINCT(i.SalesOrderNumber) AS Orders
+    FROM FactInternetSales AS i
+    JOIN DimDate AS d ON i.OrderDateKey = d.DateKey
+    GROUP BY d.CalendarYear
+    ORDER BY CalendarYear;
+    ```
+
+4. Review the output that is returned:
+    - On the **Results** tab under the query, view the order counts for each year. These should be within 2% of the actual counts retrieved by the previous query.
+    - On the **Messages** tab, view the total execution time for the query. This should be shorter than for the previous query.
+
+5. Publish the script to save the changes.
+
+> **Tip**: See the [APPROX_COUNT_DISTINCT](https://docs.microsoft.com/sql/t-sql/functions/approx-count-distinct-transact-sql) function documentation for more details.
+
+## Challenge - Analyze reseller sales
 
 1. Create a new empty script for the **sql*xxxxxxx*** SQL pool, and save it with the name **Analyze Reseller Sales**.
 2. Create SQL queries in the script to find the following information based on the **FactResellerSales** fact table and the dimension tables to which it is related:
     - The total quantity of items sold per fiscal year and quarter.
     - The total quantity of items sold per fiscal year, quarter, and sales territory region associated with the employee who made the sale.
     - The total quantity of items sold per fiscal year, quarter, and sales territory region by product category.
+    - The rank of each sales territory per fiscal year based on total sales amount for the year.
+    - The approximate number of sales order per year in each sales territory.
 
     > **Tip**: Compare your queries to the ones in the **Solution** script in the **Develop** page in Synapse Studio.
 
 3. Experiment with queries to explore the rest of the tables in the data warehouse schema as your leisure.
-4. When your done, on the **Manage** page, pause the **sql*xxxxxxx*** dedicated SQL pool.
+4. When you're done, on the **Manage** page, pause the **sql*xxxxxxx*** dedicated SQL pool.
 
 ## Delete Azure resources
 

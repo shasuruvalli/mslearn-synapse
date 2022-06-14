@@ -54,9 +54,9 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
 
 ### Enable the Synapse Link feature in your Cosmos DB account
 
-1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resource group that was created by the setup script, and identify your **cosmos-*xxxxxxxx*** Cosmos DB account.
+1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resource group that was created by the setup script, and identify your **cosmos*xxxxxxxx*** Cosmos DB account.
 
-    > **Note**: In some cases, the script may have tried to create Cosmos DB accounts in multiple regions, so there may be one or more accounts in a *deleting* state. The active account should be the one with the largest number at the end of its name - for example **cosmos-*xxxxxxx*3**.
+    > **Note**: In some cases, the script may have tried to create Cosmos DB accounts in multiple regions, so there may be one or more accounts in a *deleting* state. The active account should be the one with the largest number at the end of its name - for example **cosmos*xxxxxxx*3**.
 
 2. Open your Azure Cosmos DB account, and select the **Data Explorer** page on the left side of its blade.
 

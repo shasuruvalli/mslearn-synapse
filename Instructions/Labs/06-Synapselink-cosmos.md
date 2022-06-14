@@ -56,11 +56,14 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
 
 ### Enable the Synapse Link feature in your Cosmos DB account
 
-1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resorce group that was created by the setup script, and identify your **cosmos-*xxxxxxxx*** Cosmos DB account.
+1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resource group that was created by the setup script, and identify your **cosmos-*xxxxxxxx*** Cosmos DB account.
 
     > **Note**: In some cases, the script may have tried to create Cosmos DB accounts in multiple regions, so there may be one or more accounts in a *deleting* state. The active account should be the one with the largest number at the end of its name - for example **cosmos-*xxxxxxx*3**.
 
 2. Open your Azure Cosmos DB account, and select the **Data Explorer** page on the left side of its blade.
+
+    *If a **Welcome** dialog box is displayed, close it*
+
 3. At the top of the **Data Explorer** page, use the **Enable Azure Synapse Link** button to enable Synapse Link.
 
     ![Cosmos DB Data Explorer with Enable Azure Synapse Link button highlighted](./images/cosmos-enable-synapse-link.png)
@@ -70,7 +73,7 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
 ### Create an analytical store container
 
 1. Return to the **Data Explorer** page, and use the **new Container** button (or tile) to create a new container with the following settings:
-    - **Database id**: *(new)* AdventureWorks
+    - **Database id**: *(Create new)* AdventureWorks
     - **Share throughput across containers**: <u>Un</u>selected
     - **Container id**: Sales
     - **Partition key**: /customerid
@@ -78,7 +81,7 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
     - **Container Max RU/s**: 4000
     - **Analytical store**: On
 
-    > **Note**: In this scenario, **customerID** is used for partition key as it's likely to be used in many queries to retrieve customer and sales order information in a hypothetical application, it has relatively high cardinality (number of unique values), so it will allow the container to scale as the number of customers and sales orders grows. Using autoscale and setting the maximum value to 4000 RU/s is appropriate for a new application with initially low query volumes. A max value 4000 RU/s will enable the container to automatically scale between this value all the way down to 10% of this max value (400 RU/s) when not needed.
+    > **Note**: In this scenario, **customerid** is used for partition key as it's likely to be used in many queries to retrieve customer and sales order information in a hypothetical application, it has relatively high cardinality (number of unique values), so it will allow the container to scale as the number of customers and sales orders grows. Using autoscale and setting the maximum value to 4000 RU/s is appropriate for a new application with initially low query volumes. A max value 4000 RU/s will enable the container to automatically scale between this value all the way down to 10% of this max value (400 RU/s) when not needed.
 
 2. After the container has been created, in the **SQL API** pane, expand the **AdventureWorks** database and its **Sales** folder; and then select the **Items** folder.
 
@@ -183,10 +186,12 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 
 4. When the code has finished running, and then review the output beneath the cell in the notebook. The results should include three records; one for each of the items you added to the Cosmos DB database.
 
+    Keep the **Notebook 1** tab open - you'll return to it later.
+
 ### Query Cosmos DB from a serverless SQL pool
 
 1. In the **Data** pane, select the **Sales** container, and in its **...** menu, select **New SQL script** > **Select TOP 100 rows**.
-2. Hide the **Properties** pane and view the code that has been generated, which should look similar to this:
+2. In the **SQL script 1** tab that opens, hide the **Properties** pane and view the code that has been generated, which should look similar to this:
 
     ```sql
     IF (NOT EXISTS(SELECT * FROM sys.credentials WHERE name = 'cosmosxxxxxxxx'))
@@ -205,7 +210,16 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 
     The SQL pool requires a credential to use when accessing Cosmos DB, which is based on an authorization key for your Cosmos DB account. The script includes an initial `IF (NOT EXISTS(...` statement that checks for this credential, and throws an error if it does not exist.
 
-3. Replace the `IF (NOT EXISTS(...` statement in the script with code to create a credential, so that the script resembles the following:
+3. Replace the `IF (NOT EXISTS(...` statement in the script with the following code to create a credential, replacing *cosmosxxxxxxxx* with the name of your Cosmos DB account:
+
+    ```sql
+    CREATE CREDENTIAL [cosmosxxxxxxxx]
+    WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
+    SECRET = '<Enter your Azure Cosmos DB key here>'
+    GO
+    ```
+
+    The whole script should now resemble the following:
 
     ```sql
     CREATE CREDENTIAL [cosmosxxxxxxxx]
@@ -243,7 +257,7 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 
     Now that you have created the server credential, you can use it in any query against the Cosmos DB data source.
 
-8. Replace all of the code in the script (both the CREATE CREDENTIAL and SELECT statements) with the following code (substituting ***cosmosxxxxxxxx** with the name of your Azure Cosmos DB account):
+8. Replace all of the code in the script (both the CREATE CREDENTIAL and SELECT statements) with the following code (substituting *cosmosxxxxxxxx* with the name of your Azure Cosmos DB account):
 
     ```sql
     SELECT orderdate,
@@ -258,6 +272,28 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
     ```
 
 9. Run the script and review the results.
+
+### Verify data modifications in Cosmos DB are reflected in Synapse 
+
+1. Leaving the browser tab containing Synapse Studio open, switch back to the tab containing the Azure portal, which should be open at the **Keys** page for your Cosmos DB account.
+2. On the **Data Explorer** page, expand the **AdventureWorks** database and its **Sales** folder; and then select the **Items** folder.
+3. Use the **New Item** button to create a new customer item based on the following JSON. Then save the new item (some additional metadata fields will be added when you save the item).
+
+    ```json
+    {
+        "id": "SO43708",
+        "orderdate": "2019-07-02",
+        "customerid": "samir1@adventure-works.com",
+        "customername": "Samir Nadoy",
+        "product": "Road-150 Black, 48",
+        "quantity": 1,
+        "price": 3578.27
+    }
+    ```
+
+4. Return to the Synapse Studio tab and in the **SQL Script 1** tab, re-run the query to count sales by date. Initially, it may show the same results as before (two sales on 2019-07-01, and one on 2019-07-02). Wait a minute or so and then re-run the query again until the results show *two* sales on 2019-07-02.
+5. Switch back to the **Notebook 1** tab and re-run the cell in the Spark notebook to verify that the sale to Samir Nadoy is now included in the query results.
+
 
 ## Delete Azure resources
 

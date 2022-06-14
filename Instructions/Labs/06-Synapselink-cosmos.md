@@ -294,7 +294,6 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 4. Return to the Synapse Studio tab and in the **SQL Script 1** tab, re-run the query to count sales by date. Initially, it may show the same results as before (two sales on 2019-07-01, and one on 2019-07-02). Wait a minute or so and then re-run the query again until the results show *two* sales on 2019-07-02.
 5. Switch back to the **Notebook 1** tab and re-run the cell in the Spark notebook to verify that the sale to Samir Nadoy is now included in the query results.
 
-
 ## Delete Azure resources
 
 If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.

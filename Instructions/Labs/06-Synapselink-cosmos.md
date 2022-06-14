@@ -14,11 +14,9 @@ This lab will take approximately **30** minutes to complete.
 
 You'll need an [Azure subscription](https://azure.microsoft.com/free) in which you have administrative-level access.
 
-## Provision an Azure Synapse Analytics workspace
+## Provision Azure resources
 
-You'll need an Azure Synapse Analytics workspace with access to data lake storage and an Apache Spark pool that you can use to query and process files in the data lake.
-
-In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision an Azure Synapse Analytics workspace.
+To explore Azure Synapse Link for Cosmos DB, you'll need an Azure Synapse Analytics workspace and an Apache Spark pool, and an Azure Cosmos DB account. In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision these resources in your Azure subscription.
 
 1. Sign into the [Azure portal](https://portal.azure.com).
 2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:

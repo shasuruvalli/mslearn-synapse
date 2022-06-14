@@ -238,17 +238,17 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 6. Switch back to the browser tab containing the SQL script in Azure Synapse Studio, and paste the key into the code replacing the ***\<Enter your Azure Cosmos DB key here\>*** placeholder so that the script looks similar to this:
 
     ```sql
-        CREATE CREDENTIAL [cosmosxxxxxxxx]
-        WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
-        SECRET = '1a2b3c....................................=='
-        GO
+    CREATE CREDENTIAL [cosmosxxxxxxxx]
+    WITH IDENTITY = 'SHARED ACCESS SIGNATURE',
+    SECRET = '1a2b3c....................................=='
+    GO
 
-        SELECT TOP 100 *
-        FROM OPENROWSET(​PROVIDER = 'CosmosDB',
-                        CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorks',
-                        OBJECT = 'Sales',
-                        SERVER_CREDENTIAL = 'cosmosxxxxxxxx'
-        ) AS [Sales]
+    SELECT TOP 100 *
+    FROM OPENROWSET(​PROVIDER = 'CosmosDB',
+                    CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorks',
+                    OBJECT = 'Sales',
+                    SERVER_CREDENTIAL = 'cosmosxxxxxxxx'
+    ) AS [Sales]
     ```
 
 7. Use the **&#9655; Run** button to run the script, and review the results, which should include three records; one for each of the items you added to the Cosmos DB database.

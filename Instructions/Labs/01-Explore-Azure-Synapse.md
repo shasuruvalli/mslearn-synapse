@@ -85,8 +85,8 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
 1. In Synapse Studio, on the **Home** page, select **Ingest** to open the **Copy Data** tool
 2. In the Copy Data tool, on the **Properties** step, ensure that **Built-in copy task** and **Run once now** are selected, and click **Next >**.
 3. On the **Source** step, in the **Dataset** substep, select the following settings:
-    - **Source type**: HTTP
-    - **Connection**: *Create a new connection with the following properties:*
+    - **Source type**: All
+    - **Connection**: *Create a new connection, and in the **Linked service** pane that appears, on the **File** tab, select **HTTP**. Then continue and create a connection to a data file using the following settings:*
         - **Name**: Products
         - **Description**: Product list via HTTP
         - **Connect via integration runtime**: AutoResolveIntegrationRuntime
@@ -109,16 +109,8 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
     - **Compression type**: None
 7. On the **Target** step, in the **Dataset** substep, select the following settings:
     - **Target type**: Azure Data Lake Storage Gen 2
-    - **Connection**: *Create a new connection with the following properties:*
-        - **Name**: Product Files
-        - **Description**: CSV product data
-        - **Connect via integration runtime**: AutoResolveIntegrationRuntime
-        - **Authentication method**: System Assigned Managed Identity
-        - **Account selection method**: From subscription
-            - **Azure subscription**: *select your subscription*
-            - **Storage account name**: *Select your **datalakexxxxxxx** storage account*
-        - **Test connection**: To linked service
-8. After creating the connection, on the **Destination data store** page, ensure the following settings are selected, and then select **Next >**:
+    - **Connection**: *Select the existing connection to your data lake store (this was created for you when you created the workspace).*
+8. After selecting the connection, on the **Target/Dataset** step, ensure the following settings are selected, and then select **Next >**:
     - **Folder path**: files/product_data
     - **File name**: products.csv
     - **Copy behavior**: None

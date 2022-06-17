@@ -348,7 +348,7 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
     ```sql
     SELECT *
     FROM OPENROWSET(​PROVIDER = 'CosmosDB',
-                    CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorksSQL',
+                    CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorks',
                     OBJECT = 'Sales',
                     SERVER_CREDENTIAL = 'cosmosxxxxxxxx'
     )

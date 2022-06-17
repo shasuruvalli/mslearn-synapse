@@ -253,7 +253,7 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 
 7. Use the **&#9655; Run** button to run the script, and review the results, which should include three records; one for each of the items you added to the Cosmos DB database.
 
-    Now that you have created the server credential, you can use it in any query against the Cosmos DB data source.
+    Now that you have created the credential, you can use it in any query against the Cosmos DB data source.
 
 8. Replace all of the code in the script (both the CREATE CREDENTIAL and SELECT statements) with the following code (substituting *cosmosxxxxxxxx* with the name of your Azure Cosmos DB account):
 

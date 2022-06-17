@@ -8,7 +8,7 @@ lab:
 
 Azure Synapse Link for Azure Cosmos DB is a cloud-native *hybrid transactional analytical processing* (HTAP) technology that enables you to run near-real-time analytics over operational data stored in Azure Cosmos DB from Azure Synapse Analytics,
 
-This lab will take approximately **30** minutes to complete.
+This lab will take approximately **35** minutes to complete.
 
 ## Before you start
 
@@ -91,8 +91,11 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
     {
         "id": "SO43701",
         "orderdate": "2019-07-01",
-        "customerid": "christy12@adventure-works.com",
-        "customername": "Christy Zhu",
+        "customerid": 123,
+        "customerdetails": {
+            "customername": "Christy Zhu",
+            "customeremail": "christy12@adventure-works.com"
+        },
         "product": "Mountain-100 Silver, 44",
         "quantity": 1,
         "price": 3399.99
@@ -105,8 +108,11 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
     {
         "id": "SO43704",
         "orderdate": "2019-07-01",
-        "customerid": "julio1@adventure-works.com",
-        "customername": "Julio Ruiz",
+        "customerid": 124,
+        "customerdetails": {
+            "customername": "Julio Ruiz",
+            "customeremail": "julio1@adventure-works.com"
+        },
         "product": "Mountain-100 Black, 48",
         "quantity": 1,
         "price": 3374.99
@@ -119,8 +125,11 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
     {
         "id": "SO43707",
         "orderdate": "2019-07-02",
-        "customerid": "emma3@adventure-works.com",
-        "customername": "Emma Brown",
+        "customerid": 125,
+        "customerdetails": {
+            "customername": "Emma Brown",
+            "customeremail": "emma3@adventure-works.com"
+        },
         "product": "Road-150 Red, 48",
         "quantity": 1,
         "price": 3578.27
@@ -131,7 +140,7 @@ Before you can use Synapse Link for Cosmos DB, you must enable it in your Azure 
 
 ## Configure Synapse Link in Azure Synapse Analytics
 
-Now that you have prepared your Azure Cosmos DB account, you can configure Azure Synpase link for Cosmos DB in your Azure Synapse Analytics workspace.
+Now that you have prepared your Azure Cosmos DB account, you can configure Azure Synapse link for Cosmos DB in your Azure Synapse Analytics workspace.
 
 1. In the Azure portal, close the blade for your Cosmos DB account if it is still open, and return to the **dp000-*xxxxxxx*** resource group.
 2. Open the **synapse*xxxxxxx*** Synapse workspace, and on its **Overview** page, in the **Open Synapse Studio** card, select **Open** to open Synapse Studio in a new browser tab; signing in if prompted.
@@ -182,9 +191,88 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
     display(df.limit(10))
     ```
 
-4. When the code has finished running, and then review the output beneath the cell in the notebook. The results should include three records; one for each of the items you added to the Cosmos DB database.
+4. When the code has finished running, and then review the output beneath the cell in the notebook. The results should include three records; one for each of the items you added to the Cosmos DB database. Each record includes the fields you entered when you created the items as well as some of the metadata fields that were automatically generated.
+5. Under the results from the previous cell, use the **+ Code** icon to add a new cell to the notebook, and then enter the following code in it:
 
-    Keep the **Notebook 1** tab open - you'll return to it later.
+    ```python
+    customer_df = df.select("customerid", "customerdetails")
+    display(customer_df)
+    ```
+
+6. Use the **&#9655;** icon to the left of the cell to run it, and view the results; which should be similar to this:
+
+    | customerid | customerdetails |
+    | -- | -- |
+    | 124 | "{"customername": "Julio Ruiz","customeremail": "julio1@adventure-works.com"}" |
+    | 125 | "{"customername": "Emma Brown","customeremail": "emma3@adventure-works.com"}" |
+    | 123 | "{"customername": "Christy Zhu","customeremail": "christy12@adventure-works.com"}" |
+
+    This query created a new dataframe containing only the **customerid** and **customerdetails** columns. Observe that the **customerdetails** column contains the JSON structure for the nested data in the source item. In the table of results that is displayed, you can use the **&#9658;** icon next to the JSON value to expand it and see the individual fields it contains.
+
+7. Add another new code cell and enter the following code:
+
+    ```python
+    from pyspark.sql import functions as F
+
+    custdetails_df = customer_df.select("customerid",
+        F.json_tuple(F.to_json(F.col("customerdetails")),"customername", "customeremail"))
+
+    display(custdetails_df)
+    ```
+
+8. Run the cell and review the results, which should include the **customername** and **customeremail** from the **customerdetails** value as columns:
+
+    | customerid | customername | customeremail |
+    | -- | -- | -- |
+    | 124 | Julio Ruiz |julio1@adventure-works.com |
+    | 125 | Emma Brown |emma3@adventure-works.com |
+    | 123 | Christy Zhu | christy12@adventure-works.com |
+
+    Spark enables you to run complex data manipulation code to restructure and explore the data from Cosmos DB. In this case, the PySpark language includes a **sql** library that provides functions for manipulating JSON data.
+
+9. Add another new code cell and enter the following code:
+
+    ```sql
+    %%sql
+
+    -- Create a logical database in the Spark metastore
+    CREATE DATABASE salesdb;
+
+    USE salesdb;
+
+    -- Create a table from the Cosmos DB container
+    CREATE TABLE salesorders using cosmos.olap options (
+        spark.synapse.linkedService 'AdventureWorksSQL',
+        spark.cosmos.container 'Sales'
+    );
+
+    -- Query the table
+    SELECT *
+    FROM salesorders;
+    ```
+
+10. Run the new cell to create a new database containing a table that includes data from the Cosmos DB analytical store.
+11. Add another new code cell, and then enter and run the following code:
+
+    ```sql
+    %%sql
+
+    SELECT id, orderdate, customerdetails.customername, product
+    FROM salesorders
+    ORDER BY id;
+    ```
+
+    The results from this query should resemble this:
+
+    | id | orderdate | customername | product |
+    | -- | -- | -- | -- |
+    | SO43701 | 2019-07-01 | Christy Zhu | Mountain-100 Silver, 44 |
+    | SO43704 | 2019-07-01 | Julio Ruiz |Mountain-100 Black, 48 |
+    | SO43707 | 2019-07-02 | Emma Brown |Road-150 Red, 48 |
+
+    Observe that when using Spark SQL, you can retrieve subelements of a JSON structure as properties.
+
+12. Keep the **Notebook 1** tab open - you'll return to it later.
 
 ### Query Cosmos DB from a serverless SQL pool
 
@@ -258,18 +346,35 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 8. Replace all of the code in the script (both the CREATE CREDENTIAL and SELECT statements) with the following code (substituting *cosmosxxxxxxxx* with the name of your Azure Cosmos DB account):
 
     ```sql
-    SELECT orderdate,
-           COUNT(id) AS ordercount
+    SELECT *
     FROM OPENROWSET(​PROVIDER = 'CosmosDB',
-                    CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorks',
+                    CONNECTION = 'Account=cosmosxxxxxxxx;Database=AdventureWorksSQL',
                     OBJECT = 'Sales',
                     SERVER_CREDENTIAL = 'cosmosxxxxxxxx'
-    ) AS [Sales]
-    GROUP BY orderdate
-    ORDER BY orderdate;
+    )
+    WITH (
+        OrderID VARCHAR(10) '$.id',
+        OrderDate VARCHAR(10) '$.orderdate',
+        CustomerID INTEGER '$.customerid',
+        CustomerName VARCHAR(40) '$.customerdetails.customername',
+        CustomerEmail VARCHAR(30) '$.customerdetails.customeremail',
+        Product VARCHAR(30) '$.product',
+        Quantity INTEGER '$.quantity',
+        Price FLOAT '$.price'
+    )
+    AS sales
+    ORDER BY OrderID;
     ```
 
-9. Run the script and review the results.
+9. Run the script and review the results, which should match the schema defined in the `WITH` clause:
+
+    | OrderID | OrderDate | CustomerID | CustomerName | CustomerEmail | Product | Quantity | Price |
+    | -- | -- | -- | -- | -- | -- | -- | -- |
+    | SO43701 | 2019-07-01 | 123 | Christy Zhu | christy12@adventure-works.com | Mountain-100 Silver, 44 | 1 | 3399.99 |
+    | SO43704 | 2019-07-01 | 124 | Julio Ruiz | julio1@adventure-works.com | Mountain-100 Black, 48 | 1 | 3374.99 |
+    | SO43707 | 2019-07-02 | 125 | Emma Brown | emma3@adventure-works.com | Road-150 Red, 48 | 1 | 3578.27 |
+
+10. Keep the **SQL script 1** tab open - you'll return to it later.
 
 ### Verify data modifications in Cosmos DB are reflected in Synapse 
 
@@ -281,16 +386,19 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
     {
         "id": "SO43708",
         "orderdate": "2019-07-02",
-        "customerid": "samir1@adventure-works.com",
-        "customername": "Samir Nadoy",
+        "customerid": 126,
+        "customerdetails": {
+            "customername": "Samir Nadoy",
+            "customeremail": "samir1@adventure-works.com"
+        },
         "product": "Road-150 Black, 48",
         "quantity": 1,
         "price": 3578.27
     }
     ```
 
-4. Return to the Synapse Studio tab and in the **SQL Script 1** tab, re-run the query to count sales by date. Initially, it may show the same results as before (two sales on 2019-07-01, and one on 2019-07-02). Wait a minute or so and then re-run the query again until the results show *two* sales on 2019-07-02.
-5. Switch back to the **Notebook 1** tab and re-run the cell in the Spark notebook to verify that the sale to Samir Nadoy is now included in the query results.
+4. Return to the Synapse Studio tab and in the **SQL Script 1** tab, re-run the query. Initially, it may show the same results as before, but wait a minute or so and then re-run the query again until the results include the sale to Samir Nadoy on 2019-07-02.
+5. Switch back to the **Notebook 1** tab and re-run the last cell in the Spark notebook to verify that the sale to Samir Nadoy is now included in the query results.
 
 ## Delete Azure resources
 

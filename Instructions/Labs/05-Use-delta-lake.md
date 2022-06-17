@@ -244,7 +244,7 @@ In addition to Spark pools, Azure Synapse Analytics includes a built-in serverle
         TOP 100 *
     FROM
         OPENROWSET(
-            BULK 'https://datalakehtys1df.dfs.core.windows.net/files/delta/products-delta/',
+            BULK 'https://datalakexxxxxxx.dfs.core.windows.net/files/delta/products-delta/',
             FORMAT = 'DELTA'
         ) AS [result]
     ```

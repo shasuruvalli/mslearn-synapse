@@ -76,7 +76,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
     display(df.limit(10))
     ```
 
-10. Uncomment the *,header=True* line (because the products.csv file has the column headers in the first line), so your code looks like this:
+11. Uncomment the *,header=True* line (because the products.csv file has the column headers in the first line), so your code looks like this:
 
     ```Python
     %%pyspark
@@ -87,7 +87,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
     display(df.limit(10))
     ```
 
-11. Use the **&#9655;** icon to the left of the code cell to run it, and wait for the results. The first time you run a cell in a notebook, the Spark pool is started - so it may take a minute or so to return any results. Eventually, the results should appear below the cell, and they should be similar to this:
+12. Use the **&#9655;** icon to the left of the code cell to run it, and wait for the results. The first time you run a cell in a notebook, the Spark pool is started - so it may take a minute or so to return any results. Eventually, the results should appear below the cell, and they should be similar to this:
 
     | ProductID | ProductName | Category | ListPrice |
     | -- | -- | -- | -- |
@@ -228,6 +228,34 @@ So far you've worked with delta tables by loading data from the folder containin
 
 3. Return to the **files** tab and view the **files/delta/products-delta** folder. Note that the data files still exist in this location. Dropping the external table has removed the table from the metastore, but left the data files intact.
 4. View the **files/synapse/workspaces/synapsexxxxxxx/warehouse** folder, and note that there is no folder for the **ProductsManaged** table data. Dropping a managed table removes the table from the metastore and also deletes the table's data files.
+
+## Query a delta table from a serverless SQL pool
+
+In addition to Spark pools, Azure Synapse Analytics includes a built-in serverless SQL pool. You can use the relational database engine in this pool to query delta tables using SQL.
+
+1. In the **files** tab, browse to the **files/delta** folder.
+2. Select the **products-delta** folder, and on the toolbar, in the **New SQL script** drop-down list, select **Select TOP 100 rows**.
+3. In the **Select TOP 100 rows** pane, in the **File type** list, select **Delta format** and then select **Apply**.
+4. Review the SQL code that is generated, which should look like this:
+
+    ```sql
+    -- This is auto-generated code
+    SELECT
+        TOP 100 *
+    FROM
+        OPENROWSET(
+            BULK 'https://datalakehtys1df.dfs.core.windows.net/files/delta/products-delta/',
+            FORMAT = 'DELTA'
+        ) AS [result]
+    ```
+
+5. Use the **&#9655; Run** icon to run the script, and review the results. They should look similar to this:
+
+    | ProductID | ProductName | Category | ListPrice |
+    | -- | -- | -- | -- |
+    | 771 | Mountain-100 Silver, 38 | Mountain Bikes | 3059.991 |
+    | 772 | Mountain-100 Silver, 42 | Mountain Bikes | 3399.9900 |
+    | ... | ... | ... | ... |
 
 ## Delete Azure resources
 

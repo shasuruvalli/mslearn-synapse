@@ -8,7 +8,7 @@ lab:
 
 Delta Lake is an open source project to build a transactional data storage layer on top of a data lake. Delta Lake adds support for relational semantics for both batch and streaming data operations, and enables the creation of a *Lakehouse* architecture in which Apache Spark can be used to process and query data in tables that are based on underlying files in the data lake.
 
-This lab will take approximately **30** minutes to complete.
+This lab will take approximately **40** minutes to complete.
 
 ## Before you start
 

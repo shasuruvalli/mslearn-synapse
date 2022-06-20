@@ -8,7 +8,7 @@ lab:
 
 Azure Synapse Analytics provides a single, consolidated data analytics platform for end-to end data analytics. In this lab, you'll explore various ways to ingest and explore data. This lab is designed as a high-level overview of the various core capabilities of Azure Synapse Analytics; which you'll explore in more depth in later labs.
 
-This lab will take approximately **90** minutes to complete.
+This lab will take approximately **60** minutes to complete.
 
 ## Before you start
 
@@ -317,7 +317,7 @@ While SQL is a common language for querying structured datasets, many data analy
 
 So far you've seen some techniques for exploring and processing file-based data in a data lake. In many cases, an enterprise analytics solution uses a data lake to store and prepare unstructured data that can then be loaded into a relational data warehouse to support business intelligence (BI) workloads. In Azure Synapse Analytics, these data warehouses can be implemented in a dedicated SQL pool.
 
-1. In Synapse Studio, on the **Manage** page, in the **SQL pools** section, select the **sql*xxxxxxx*** dedicated SQL pool and then select its **&#9655;** icon to resume it.
+1. In Synapse Studio, on the **Manage** page, in the **SQL pools** section, select the **sql*xxxxxxx*** dedicated SQL pool row and then use its **&#9655;** icon to resume it.
 2. Wait for the SQL pool to start. This can take a few minutes. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **Online** when it is ready.
 3. When the SQL pool has started, select the **Data** page; and on the **Workspace** tab, expand **SQL databases** and verify that **sql*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary).
 4. Expand the **sql*xxxxxxx*** database and its **Tables** folder,  and then in the **...** menu for the **FactInternetSales** table, point to **New SQL script**, and select **Select TOP 100 rows**.
@@ -339,7 +339,7 @@ So far you've seen some techniques for exploring and processing file-based data 
 
 9. Close the query pane, and then view the **Develop** page to verify that the SQL script has been saved.
 
-10. On the **Manage** page, select the **sql*xxxxxxx*** dedicated SQL pool and use its **||** icon to pause it.
+10. On the **Manage** page, select the **sql*xxxxxxx*** dedicated SQL pool row and use its **||** icon to pause it.
 
 ## Explore data with a Data Explorer pool
 
@@ -347,7 +347,7 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 
 ### Create a Data Explorer database
 
-1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool and then select its **&#9655;** icon to resume it.
+1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool row and then use its **&#9655;** icon to resume it.
 2. While waiting for the pool to start, download **devices.csv** from [https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv), saving it in any folder on your local computer.
 3. Continue waiting for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
 4. When the Data Explorer pool has started, select the **Data** page; and on the **Workspace** tab, expand **Data Explorer databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
@@ -433,7 +433,7 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 
 11. Close the query pane, and then view the **Develop** page to verify that the KQL script has been saved.
 
-12. On the **Manage** page, select the **adx*xxxxxxx*** Data Explorer pool and use its **||** icon to pause it.
+ 12. On the **Manage** page, select the **adx*xxxxxxx*** Data Explorer pool row and use its **||** icon to pause it.
 
 ## Delete Azure resources
 

@@ -168,7 +168,7 @@ So far you've worked with delta tables by loading data from the folder containin
     spark.sql("DESCRIBE EXTENDED ProductsExternal").show(truncate=False)
     ```
 
-    This code creates an external tabled named **ProductsExternal** based on the path to the parquet files you defined previously. It then displays a description of the table's properties. Note tat the **Location** property is the path you specified.
+    This code creates an external tabled named **ProductsExternal** based on the path to the parquet files you defined previously. It then displays a description of the table's properties. Note that the **Location** property is the path you specified.
 
 2. Add a new code cell, and then enter and run the following code:
 
@@ -176,7 +176,6 @@ So far you've worked with delta tables by loading data from the folder containin
     %%sql
 
     SELECT * FROM ProductsExternal
-
     ```
 
     The code uses SQL to query the **ProductsExternal** table.
@@ -229,6 +228,120 @@ So far you've worked with delta tables by loading data from the folder containin
 3. Return to the **files** tab and view the **files/delta/products-delta** folder. Note that the data files still exist in this location. Dropping the external table has removed the table from the metastore, but left the data files intact.
 4. View the **files/synapse/workspaces/synapsexxxxxxx/warehouse** folder, and note that there is no folder for the **ProductsManaged** table data. Dropping a managed table removes the table from the metastore and also deletes the table's data files.
 
+## Use delta tables for streaming data
+
+Delta lake supports streaming data. Delta tables can be a *sink* or a *source* for data streams created using the Spark Structured Streaming API. In this example, you'll use a delta table as a sunk for some streaming data in a simulated internet of things (IoT) scenario.
+
+1. Return to the **Notebook 1** tab and add a new code cell. Then, in the new cell, add the following code and run it:
+
+    ```python
+    from notebookutils import mssparkutils
+    from pyspark.sql.types import *
+    from pyspark.sql.functions import *
+
+    # Create a folder
+    inputPath = '/data/'
+    mssparkutils.fs.mkdirs(inputPath)
+
+    # Create a stream that reads data from the folder, using a JSON schema
+    jsonSchema = StructType([
+    StructField("device", StringType(), False),
+    StructField("status", StringType(), False)
+    ])
+    iotstream = spark.readStream.schema(jsonSchema).option("maxFilesPerTrigger", 1).json(inputPath)
+
+    # Write some event data to the folder
+    device_data = '''{"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev2","status":"error"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"error"}
+    {"device":"Dev2","status":"ok"}
+    {"device":"Dev2","status":"error"}
+    {"device":"Dev1","status":"ok"}'''
+    mssparkutils.fs.put(inputPath + "data.txt", device_data, True)
+    print("Source stream created...")
+    ```
+
+    Ensure the message *Source stream created...* is printed. The code you just ran has created a streaming data source based on a folder to which some data has been saved, representing readings from hypothetical IoT devices.
+
+2. In a new code cell, add and run the following code:
+
+    ```python
+    # Write the stream to a delta table
+    delta_stream_table_path = '/delta/iotdevicedata'
+    checkpointpath = '/delta/checkpoint'
+    deltastream = iotstream.writeStream.format("delta").option("checkpointLocation", checkpointpath).start(delta_stream_table_path)
+    print("Streaming to delta sink...")
+    ```
+
+    This code writes the streaming device data in delta format.
+
+3. In a new code cell, add and run the following code:
+
+    ```python
+    # Read the data in delta format into a dataframe
+    df = spark.read.format("delta").load(delta_stream_table_path)
+    display(df)
+    ```
+
+    This code reads the streamed data in delta format into a dataframe. Note that the code to load streaming data is no different to that used to load static data from a delta folder.
+
+4. In a new code cell, add and run the following code:
+
+    ```python
+    # create a catalog table based on the streaming sink
+    spark.sql("CREATE TABLE IotDeviceData USING DELTA LOCATION '{0}'".format(delta_stream_table_path))
+    ```
+
+    This code creates a catalog table named **IotDeviceData** based on the delta folder. Again, this code is the same as would be used for non-streaming data.
+
+5. In a new code cell, add and run the following code:
+
+    ```sql
+    %%sql
+
+    SELECT * FROM IotDeviceData;
+    ```
+
+    This code queries the **IotDeviceData** table, which contains the device data from the streaming source.
+
+6. In a new code cell, add and run the following code:
+
+    ```python
+    # Add more data to the source stream
+    more_data = '''{"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"ok"}
+    {"device":"Dev1","status":"error"}
+    {"device":"Dev2","status":"error"}
+    {"device":"Dev1","status":"ok"}'''
+
+    mssparkutils.fs.put(inputPath + "more-data.txt", more_data, True)
+    ```
+
+    This code writes more hypothetical device data to the streaming source.
+
+7. In a new code cell, add and run the following code:
+
+    ```sql
+    %%sql
+
+    SELECT * FROM IotDeviceData;
+    ```
+
+    This code queries the **IotDeviceData** table again, which should now include the additional data that was added to the streaming source.
+
+8. In a new code cell, add and run the following code:
+
+    ```python
+    deltastream.stop()
+    ```
+
+    This code stops the stream.
+
 ## Query a delta table from a serverless SQL pool
 
 In addition to Spark pools, Azure Synapse Analytics includes a built-in serverless SQL pool. You can use the relational database engine in this pool to query delta tables using SQL.
@@ -256,6 +369,8 @@ In addition to Spark pools, Azure Synapse Analytics includes a built-in serverle
     | 771 | Mountain-100 Silver, 38 | Mountain Bikes | 3059.991 |
     | 772 | Mountain-100 Silver, 42 | Mountain Bikes | 3399.9900 |
     | ... | ... | ... | ... |
+
+    You can use a serverless SQL pool to query delta tables that were created using Spark, and use the results for reporting or analysis.
 
 ## Delete Azure resources
 

@@ -164,29 +164,32 @@ So far you've worked with delta tables by loading data from the folder containin
 1. In a new code cell, add and run the following code:
 
     ```Python
-    spark.sql("CREATE TABLE ProductsExternal USING DELTA LOCATION '{0}'".format(delta_table_path))
-    spark.sql("DESCRIBE EXTENDED ProductsExternal").show(truncate=False)
+    spark.sql("CREATE DATABASE AdventureWorks")
+    spark.sql("CREATE TABLE AdventureWorks.ProductsExternal USING DELTA LOCATION '{0}'".format(delta_table_path))
+    spark.sql("DESCRIBE EXTENDED AdventureWorks.ProductsExternal").show(truncate=False)
     ```
 
-    This code creates an external tabled named **ProductsExternal** based on the path to the parquet files you defined previously. It then displays a description of the table's properties. Note that the **Location** property is the path you specified.
+    This code creates a new database named **AdventureWorks** and then creates an external tabled named **ProductsExternal** in that database based on the path to the parquet files you defined previously. It then displays a description of the table's properties. Note that the **Location** property is the path you specified.
 
 2. Add a new code cell, and then enter and run the following code:
 
     ```sql
     %%sql
 
-    SELECT * FROM ProductsExternal
+    USE AdventureWorks;
+
+    SELECT * FROM ProductsExternal;
     ```
 
-    The code uses SQL to query the **ProductsExternal** table.
+    The code uses SQL to switch context to the **AdventureWorks** database (which returns no data) and then query the **ProductsExternal** table (which returns a resultset containing the products data in the Delta Lake table).
 
 ### Create a managed table
 
 1. In a new code cell, add and run the following code:
 
     ```Python
-    df.write.format("delta").saveAsTable("ProductsManaged")
-    spark.sql("DESCRIBE EXTENDED ProductsManaged").show(truncate=False)
+    df.write.format("delta").saveAsTable("AdventureWorks.ProductsManaged")
+    spark.sql("DESCRIBE EXTENDED AdventureWorks.ProductsManaged").show(truncate=False)
     ```
 
     This code creates a managed tabled named **ProductsManaged** based on the DataFrame you originally loaded from the **products.csv** file (before you updated the price of product 771). You do not specify a path for the parquet files used by the table - this is managed for you in the Hive metastore, and shown in the **Location** property in the table description (in the **files/synapse/workspaces/synapsexxxxxxx/warehouse** path).
@@ -196,8 +199,9 @@ So far you've worked with delta tables by loading data from the folder containin
     ```sql
     %%sql
 
-    SELECT * FROM ProductsManaged
+    USE AdventureWorks;
 
+    SELECT * FROM ProductsManaged;
     ```
 
     The code uses SQL to query the **ProductsManaged** table.
@@ -209,15 +213,19 @@ So far you've worked with delta tables by loading data from the folder containin
     ```sql
     %%sql
 
-    SHOW TABLES
+    USE AdventureWorks;
+
+    SHOW TABLES;
     ```
 
-    This code lists the tables in the metastore for your Spark pool. Note that both tables are defined in the **default** database.
+    This code lists the tables in the **AdventureWorks** database.
 
-2. In a new code cell, add and run the following code:
+2. Modify the code cell as follows, add run it:
 
     ```sql
     %%sql
+
+    USE AdventureWorks;
 
     DROP TABLE IF EXISTS ProductsExternal;
     DROP TABLE IF EXISTS ProductsManaged;
@@ -227,6 +235,32 @@ So far you've worked with delta tables by loading data from the folder containin
 
 3. Return to the **files** tab and view the **files/delta/products-delta** folder. Note that the data files still exist in this location. Dropping the external table has removed the table from the metastore, but left the data files intact.
 4. View the **files/synapse/workspaces/synapsexxxxxxx/warehouse** folder, and note that there is no folder for the **ProductsManaged** table data. Dropping a managed table removes the table from the metastore and also deletes the table's data files.
+
+### Create a table using SQL
+
+1. Add a new code cell, and then enter and run the following code:
+
+    ```sql
+    %%sql
+
+    USE AdventureWorks;
+
+    CREATE TABLE Products
+    USING DELTA
+    LOCATION '/delta/products-delta';
+    ```
+
+2. Add a new code cell, and then enter and run the following code:
+
+    ```sql
+    %%sql
+
+    USE AdventureWorks;
+
+    SELECT * FROM Products;
+    ```
+
+    Observe that the new catalog table was created for the existing Delta Lake table folder, which reflects the changes that were made previously. 
 
 ## Use delta tables for streaming data
 
@@ -295,7 +329,7 @@ Delta lake supports streaming data. Delta tables can be a *sink* or a *source* f
     spark.sql("CREATE TABLE IotDeviceData USING DELTA LOCATION '{0}'".format(delta_stream_table_path))
     ```
 
-    This code creates a catalog table named **IotDeviceData** based on the delta folder. Again, this code is the same as would be used for non-streaming data.
+    This code creates a catalog table named **IotDeviceData** (in the **default** database) based on the delta folder. Again, this code is the same as would be used for non-streaming data.
 
 5. In a new code cell, add and run the following code:
 
@@ -370,7 +404,17 @@ In addition to Spark pools, Azure Synapse Analytics includes a built-in serverle
     | 772 | Mountain-100 Silver, 42 | Mountain Bikes | 3399.9900 |
     | ... | ... | ... | ... |
 
-    You can use a serverless SQL pool to query delta tables that were created using Spark, and use the results for reporting or analysis.
+    This demonstrates how you can use a serverless SQL pool to query delta format files that were created using Spark, and use the results for reporting or analysis.
+
+6. Replace the query with the following SQL code:
+
+    ```sql
+    USE AdventureWorks;
+
+    SELECT * FROM Products;
+    ```
+
+7. Run the code and observe that you can also use the serverless SQL pool to query Delta Lake data in catalog tables that are defined the Spark metastore.
 
 ## Delete Azure resources
 

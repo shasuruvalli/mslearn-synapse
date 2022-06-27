@@ -164,7 +164,7 @@
       ]
     },
     {
-      "type": "Microsoft.Authorization/roleAssignments",
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
       "apiVersion": "2018-09-01-preview",
       "name": "[concat(parameters('dataLakeAccountName'), '/default/', variables('defaultDataLakeStorageFilesystemName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataOwnerRoleID'), '/', parameters('workspaceName'))))]",
       "location": "[variables('location')]",

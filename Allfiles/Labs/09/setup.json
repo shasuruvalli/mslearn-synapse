@@ -149,7 +149,7 @@
       },
       "resources": [
         {
-          "type": "firewallRules",
+          "type": "firewallrules",
           "apiVersion": "2019-06-01-preview",
           "name": "allowAll",
           "location": "[variables('location')]",
@@ -241,7 +241,7 @@
           },
           {
             "name": "AllowAllClientIps",
-            "type": "firewallRules",
+            "type": "firewallrules",
             "apiVersion": "2020-02-02-preview",
             "location": "[resourceGroup().location]",
             "properties": {

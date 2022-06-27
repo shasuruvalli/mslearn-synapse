@@ -98,7 +98,7 @@ Now you're ready to configure Azure Synapse Link for SQL in your Synapse Analyti
 ### Create the target schema
 
 1. In Synapse Studio, on the **Data** page, on the **Workspace** tab, expand **SQL databases** and select your **sql*xxxxxxx*** database.
-2. In the **...*** menu for the **sql*xxxxxxx*** database, select **New SQL script** > **Empty script**.
+2. In the **...** menu for the **sql*xxxxxxx*** database, select **New SQL script** > **Empty script**.
 3. In the **SQL Script 1** pane, enter the following SQL code and use the  **&#9655; Run** button to run it.
 
     ```sql

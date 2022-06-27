@@ -149,7 +149,7 @@
       },
       "resources": [
         {
-          "type": "firewallrules",
+          "type": "firewallRules",
           "apiVersion": "2019-06-01-preview",
           "name": "allowAll",
           "location": "[variables('location')]",
@@ -164,7 +164,7 @@
       ]
     },
     {
-      "type": "Microsoft.Storage/storageAccounts/blobServices/containers/providers/roleAssignments",
+      "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2018-09-01-preview",
       "name": "[concat(parameters('dataLakeAccountName'), '/default/', variables('defaultDataLakeStorageFilesystemName'), '/Microsoft.Authorization/',  guid(concat(resourceGroup().id, '/', variables('storageBlobDataOwnerRoleID'), '/', parameters('workspaceName'))))]",
       "location": "[variables('location')]",
@@ -241,7 +241,7 @@
           },
           {
             "name": "AllowAllMicrosoftAzureIps",
-            "type": "firewallrules",
+            "type": "firewallRules",
             "apiVersion": "2020-02-02-preview",
             "location": "[resourceGroup().location]",
             "properties": {

@@ -6,9 +6,6 @@ lab:
 
 # Use Azure Synapse Link for SQL
 
-# UNDER DEVELOPMENT....
-
-
 Azure Synapse Link for SQL enables you to automatically synchronize a transactional database in SQL Server or Azure SQL Database with a dedicated SQL pool in Azure Synapse Analytics. This synchronization enables you to perform low-latency analytical workloads in Synapse Analytics without incurring query overhead in the source operational database.
 
 This lab will take approximately **35** minutes to complete.
@@ -82,12 +79,114 @@ Before you can set up Azure Synapse Link for your Azure SQL Database, you must e
 Your Azure SQL server hosts a sample database named **AdventureWorksLT**. This database represents a transactional database used for operational application data.
 
 1. In the **Overview** page for your Azure SQL server, at the bottom of the, select the **AdventureWorksLT** database:
-
-    ![Screenshot of the Azure SQL server Overview page in the Azure portal.](./images/sqldb-overview.png)
-
 2. In the **AdventureWorksLT** database page, select the **Query editor** tab and log in using SQL server authentication with the following credentials:
     - **Login** SQLUser
     - **Password**: *The password you specified when running the setup script.*
+3. When the query editor opens, expand the **Tables** node and view the list of tables in the database. Note that they include tables in a **SalesLT** schema (for example, **SalesLT.Customer**).
+## Configure Azure Synapse Link
 
+Now you're ready to configure Azure Synapse Link for SQL in your Synapse Analytics workspace.
 
-    ![Screenshot of the Azure SQL server Overview page in the Azure portal.](./images/sqldb-login.png)
+### Start the dedicated SQL pool
+
+1. In the Azure portal, close the query editor for your Azure SQL database (discarding any changes) and return to the page for your **dp000-*xxxxxxx*** resource group.
+2. Open the **synapse*xxxxxxx*** Synapse workspace, and on its **Overview** page, in the **Open Synapse Studio** card, select **Open** to open Synapse Studio in a new browser tab; signing in if prompted.
+3. On the left side of Synapse Studio, use the **&rsaquo;&rsaquo;** icon to expand the menu - this reveals the different pages within Synapse Studio.
+4. On the **Manage** page, on the **SQL pools** tab, select the row for the **sql*xxxxxxx*** dedicated SQL pool and use its **&#9655;** icon to start it; confirming that you want to resume it when prompted.
+5. Wait for the SQL pool to resume. This can take a few minutes. You can use the **&#8635; Refresh** button to check its status periodically. The status will show as **Online** when it is ready.
+
+### Create the target schema
+
+1. In Synapse Studio, on the **Data** page, on the ****Workspace** tab, expand **SQL databases** and select your **sql*xxxxxxx*** database.
+2. In the **...*** menu for the **sql*xxxxxxx*** database, select **New SQL script** > **Empty script**.
+3. In the **SQL Script 1** pane, enter the following SQL code and use the  **&#9655; Run** button to run it.
+
+    ```sql
+    CREATE SCHEMA SalesLT;
+    GO
+    ```
+
+4. Wait for the query to complete successfully. This code creates a schema named **SalesLT** in the database for your dedicated SQL pool, enabling you to synchronize tables in the schema of that name from your Azure SQL database.
+
+### Create a link connection
+
+1. In Synapse Studio, on the **Integrate** page, on the **&#65291;** drop-down menu, select **Link connection**. Then create a new linked connection with the following settings:
+    - **Source type**: Azure SQL database
+    - **Source linked service**: Add a new linked service with the following settings (a new tab will be opened):
+        - **Name**: SqlAdventureWorksLT
+        - **Description**: Connection to AdventureWorksLT database
+        - **Connect via integration runtime**: AutoResolveIntegrationRuntime
+        - **Connection String**: Selected
+        - **From Azure subscription**: Selected
+        - **Azure subscription**: *Select your Azure subscription*
+        - **Server name**: *Select your **sqldbxxxxxxx** Azure SQL server*
+        - **Database name**: AdventureWorksLT
+        - **Authentication type**: SQL authentication
+        - **User name**: SQLUser
+        - **Password**: *The password you set when running the setup script*
+
+        *Use the **Test Connection** option to ensure your connection settings are correct before continuing!*
+
+    - **Source tables**: Select the following tables:
+        - **SalesLT.Customer**
+        - **SalesLT.Product**
+        - **SalesLT.SalesOrderDetail**
+        - **SalesLT.SalesOrderHeader**
+
+        *Continue to configure the following settings:*
+
+    - **Target pool**: *Select your **sqlxxxxxxx** dedicated SQL pool*
+
+        *Continue to configure the following settings:*
+
+    - **Link connection name**: sql-adventureworkslt-conn
+    - **Core count**: 4 (+ 4 Driver cores)
+
+2. In the **sql-adventureworkslt-conn** page that is created, view the table mappings that have been created. You can use the **Properties** button (which looks similar to **&#128463;.**) hide the **Properties** pane to make it easier to see eveything. Some target tables display an error because the data in the source table is not compatible with the default structure type (index) of *clustered columnstore*.
+3. Modify the table mappings as follows:
+
+    | Source table | Target table | Distribution type | Distribution column | Structure type |
+    |--|--|--|--|--|
+    | SalesLT.Customer **&#8594;** | \[SalesLT] . \[Customer] | Round robin | - | Clustered columnstore index |
+    | SalesLT.Product **&#8594;** | \[SalesLT] . \[Product] | Round robin | - | Heap |
+    | SalesLT.SalesOrderDetail **&#8594;** | \[SalesLT] . \[SalesOrderDetail] | Round robin | - | Clustered columnstore index |
+    | SalesLT.SalesOrderHeader **&#8594;** | \[SalesLT] . \[SalesOrderHeader] | Round robin | - | Heap |
+
+4. At the top of the **sql-adventureworkslt-conn** page that is created, use the **&#9655; Start** button to start synchronization. When prompted, selecy **OK** to publish and start the link connection.
+5. After starting the connection, on the **Monitor** page, view the **Link connections** tab and select the **sql-adventureworkslt-conn** connection. You can use the **&#8635; Refresh** button to update the status periodically. It may take several minutes to complete the initial snapshot copy process and start replicating - after that, all changes in the source database tables will be automatically replayed in the synchronized tables.
+
+### View the replicated data
+
+1. After the status of the tables has changed to **Replicating**, select the **Data** page and use the  **&#8635;** icon at the top right to refresh the view.
+2. On the **Workspace** tab, expand **SQL databases**,  your **sql*xxxxxxx*** database, and its **Tables** folder to view the replicated tables.
+3. In the **...** menu for the **sql*xxxxxxx*** database, select **New SQL script** > **Empty script**. Then in the new script page, enter the following SQL code:
+
+    ```sql
+    SELECT  oh.SalesOrderID, oh.OrderDate,
+            p.ProductNumber, p.Color, p.Size,
+            c.EmailAddress AS CustomerEmail,
+            od.OrderQty, od.UnitPrice
+    FROM SalesLT.SalesOrderHeader AS oh
+    JOIN SalesLT.SalesOrderDetail AS od 
+        ON oh.SalesOrderID = od.SalesOrderID
+    JOIN  SalesLT.Product AS p 
+        ON od.ProductID = p.ProductID
+    JOIN SalesLT.Customer as c
+        ON oh.CustomerID = c.CustomerID
+    ORDER BY oh.SalesOrderID;
+    ```
+
+4. Use the **&#9655; Run** button to run the script and view the results. The query is tun against the replicated tables in the dedicated SQL pool and not the source database, enabling you to run analytical queries without impacting business applications.
+5. When you're done, on the **Manage** page, pause the **sql*xxxxxxx*** dedicated SQL pool.
+
+## Delete Azure resources
+
+If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
+
+1. Close the Synapse Studio browser tab and return to the Azure portal.
+2. On the Azure portal, on the **Home** page, select **Resource groups**.
+3. Select the **dp000-*xxxxxxx*** resource group that was created by the setup script at the beginning of this exercise.
+4. At the top of the **Overview** page for your resource group, select **Delete resource group**.
+5. Enter the **dp000-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
+
+    After a few minutes, your resource group and the resources it contained will be deleted.

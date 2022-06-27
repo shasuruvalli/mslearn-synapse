@@ -176,7 +176,7 @@ Now you're ready to configure Azure Synapse Link for SQL in your Synapse Analyti
     ORDER BY oh.SalesOrderID;
     ```
 
-4. Use the **&#9655; Run** button to run the script and view the results. The query is tun against the replicated tables in the dedicated SQL pool and not the source database, enabling you to run analytical queries without impacting business applications.
+4. Use the **&#9655; Run** button to run the script and view the results. The query is run against the replicated tables in the dedicated SQL pool and not the source database, enabling you to run analytical queries without impacting business applications.
 5. When you're done, on the **Manage** page, pause the **sql*xxxxxxx*** dedicated SQL pool.
 
 ## Delete Azure resources

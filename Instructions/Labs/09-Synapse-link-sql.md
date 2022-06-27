@@ -6,6 +6,9 @@ lab:
 
 # Use Azure Synapse Link for SQL
 
+# UNDER DEVELOPMENT....
+
+
 Azure Synapse Link for SQL enables you to automatically synchronize a transactional database in SQL Server or Azure SQL Database with a dedicated SQL pool in Azure Synapse Analytics. This synchronization enables you to perform low-latency analytical workloads in Synapse Analytics without incurring query overhead in the source operational database.
 
 This lab will take approximately **35** minutes to complete.
@@ -50,3 +53,41 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
 ## Configure Azure SQL Database
 
+Before you can set up Azure Synapse Link for your Azure SQL Database, you must ensure that the required configuration settings have been applied in your Azure SQL Database server.
+
+1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resource group that was created by the setup script, and select your **sqldb*xxxxxxxx*** Azure SQL server.
+
+    > **Note**: be careful not to mix up the Azure SQL server resource **sqldb*xxxxxxxx***) and the Azure Synapse Analytics dedicated SQL pool (**sql*xxxxxxxx***).
+
+2. In the page for your Azure SQL Database resource, in the pane on the left, in the **Security** section (near the bottom), select **Identity**. Then under **System assigned managed identity**, set the **Status** option to **On**. Then use the **&#128427; Save** icon to save your configuration change.
+
+    ![Screenshot of the Azure SQL server Identity page in the Azure portal.](./images/sqldb-identity.png)
+
+3. In the pane on the left, in the **Security** section, select **Networking**. Then, under **Firewall rules**, select the exception to **Allow Azure services and resources to access this server**.
+
+4. Use the **&#65291; Add a firewall rule** button to add a new firewall rule with the following settings:
+
+    | Rule name | Start IP | End IP |
+    | -- | -- | -- |
+    | AllClients | 0.0.0.0 | 255.255.255.255 |
+
+    > **Note**: This rule allows access to your server from any Internet-connected computer. We're enabling this to simplify the exercise, but in a production scenario you should restrict access to only network addresses that need to use your databases.
+
+5. Use the **Save** button to sve your configuration change:
+
+    ![Screenshot of the Azure SQL server Networking page in the Azure portal.](./images/sqldb-network.png)
+
+## Explore the transactional database
+
+Your Azure SQL server hosts a sample database named **AdventureWorksLT**. This database represents a transactional database used for operational application data.
+
+1. In the **Overview** page for your Azure SQL server, at the bottom of the, select the **AdventureWorksLT** database:
+
+    ![Screenshot of the Azure SQL server Overview page in the Azure portal.](./images/sqldb-overview.png)
+
+2. In the **AdventureWorksLT** database page, select the **Query editor** tab and log in using SQL server authentication with the following credentials:
+    - **Login** SQLUser
+    - **Password**: *The password you specified when running the setup script.*
+
+
+    ![Screenshot of the Azure SQL server Overview page in the Azure portal.](./images/sqldb-login.png)

@@ -55,5 +55,14 @@ In this exercise we're going to connect to the synapse instance and storage acco
 > The system only currently supports the use of East US, East US 2, and East US 2 EAUP regions.
 > which may impact your ability to complete this portion of the lab.
 
+1. Sign into [PowerApps](https://make.preview.powerapps.com/)
+2. Expand the Dataverse section:
+
+![Azure PowerApps Dataverse](./images/open-dataverse.png)
+
+3. Select the #Select Synapse Link#.
+
+![Azure Synapse Link Selection](./images/select-synapse-link.png)
+
 ## Upload data file to dataverse
 ## Mark data file for differential updates

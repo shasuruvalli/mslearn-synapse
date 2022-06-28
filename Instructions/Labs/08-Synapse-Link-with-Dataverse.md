@@ -50,5 +50,10 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
 ## Provision Dataverse Resource
 
+In this exercise we're going to connect to the synapse instance and storage account in the resource group we just created. 
+[!Warning]
+> The system only currently supports the use of East US, East US 2, and East US 2 EAUP regions.
+> which may impact your ability to complete this portion of the lab.
+
 ## Upload data file to dataverse
 ## Mark data file for differential updates

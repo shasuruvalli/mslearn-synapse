@@ -52,7 +52,7 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
 In this exercise we're going to connect to the synapse instance and storage account in the resource group we just created. 
 > **[!IMPORTANT]**
-> The system only currently supports the use of *East US, East US 2, and East US 2 EAUP regions* for storage accounts which may impact your ability to complete  this portion of the lab.
+> The system currently supports only the use of *East US, East US 2, and East US 2 EAUP regions* for storage accounts which may impact your ability to complete  this portion of the lab.
 
 1. Sign into [PowerApps](https://make.preview.powerapps.com/)
 2. Expand the Dataverse section:

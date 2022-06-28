@@ -70,6 +70,7 @@ while ($complexPassword -ne 1)
 # Register resource providers
 Write-Host "Registering resource providers...";
 Register-AzResourceProvider -ProviderNamespace Microsoft.Synapse
+Register-AzResourceProvider -ProviderNamespace Microsoft.Sql
 Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
 Register-AzResourceProvider -ProviderNamespace Microsoft.Compute
 
@@ -94,6 +95,36 @@ $max_index = $locations.Count - 1
 $rand = (0..$max_index) | Get-Random
 $Region = $locations.Get($rand).Location
 
+# Test for subscription Azure SQL capacity constraints in randomly selected regions
+# (for some subsription types, quotas are adjusted dynamically based on capacity)
+ $success = 0
+ $tried_list = New-Object Collections.Generic.List[string]
+
+ while ($success -ne 1){
+    write-host "Trying $Region"
+    $capability = Get-AzSqlCapability -LocationName $Region
+    if($capability.Status -eq "Available")
+    {
+        $success = 1
+        write-host "Using $Region"
+    }
+    else
+    {
+        $success = 0
+        $tried_list.Add($Region)
+        $locations = $locations | Where-Object {$_.Location -notin $tried_list}
+        if ($locations.length -gt 0)
+        {
+            $rand = (0..$($locations.Count - 1)) | Get-Random
+            $Region = $locations.Get($rand).Location
+        }
+        else {
+            Write-Host "Couldn't find an available region for deployment."
+            Write-Host "Sorry! Try again later."
+            Exit
+        }
+    }
+}
 Write-Host "Creating $resourceGroupName resource group in $Region ..."
 New-AzResourceGroup -Name $resourceGroupName -Location $Region | Out-Null
 

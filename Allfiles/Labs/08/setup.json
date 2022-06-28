@@ -206,6 +206,53 @@
           "createMode": "Default",
           "collation": "SQL_Latin1_General_CP1_CI_AS"
         }
+      },
+      {
+        "name": "[variables('sqlserverName')]",
+        "type": "Microsoft.Sql/servers",
+        "apiVersion": "2020-02-02-preview",
+        "location": "[resourceGroup().location]",
+        "tags": {
+          "displayName": "SqlServer"
+        },
+        "properties": {
+          "administratorLogin": "[parameters('sqlUser')]",
+          "administratorLoginPassword": "[parameters('sqlPassword')]",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "name": "AdventureWorksLT",
+            "type": "databases",
+            "apiVersion": "2020-02-02-preview",
+            "location": "[resourceGroup().location]",
+            "tags": {
+              "displayName": "Database"
+            },
+            "properties": {
+              "edition": "Standard",
+              "collation": "SQL_Latin1_General_CP1_CI_AS",
+              "requestedServiceObjectiveName": "Standard",
+              "sampleName": "AdventureWorksLT"
+            },
+            "dependsOn": [
+              "[variables('sqlserverName')]"
+            ]
+          },
+          {
+            "name": "AllowAllClientIps",
+            "type": "firewallrules",
+            "apiVersion": "2020-02-02-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "endIpAddress": "0.0.0.0",
+              "startIpAddress": "255.255.255.255"
+            },
+            "dependsOn": [
+              "[variables('sqlserverName')]"
+            ]
+          }
+        ]
       }
     ],
     "outputs": {}

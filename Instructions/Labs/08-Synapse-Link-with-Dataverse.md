@@ -78,5 +78,14 @@ In this exercise we're going to connect to the synapse instance and storage acco
    
 ![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
 
-## Upload data file to dataverse
-## Mark data file for differential updates
+## Delete Azure resources
+
+If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
+
+1. Close the Synapse Studio browser tab and return to the Azure portal.
+2. On the Azure portal, on the **Home** page, select **Resource groups**.
+3. Select the **dp000-*xxxxxxx*** resource group that was created by the setup script at the beginning of this exercise.
+4. At the top of the **Overview** page for your resource group, select **Delete resource group**.
+5. Enter the **dp000-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
+
+    After a few minutes, your resource group and the resources it contained will be deleted.

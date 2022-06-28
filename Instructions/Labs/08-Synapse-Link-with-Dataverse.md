@@ -47,3 +47,8 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
     > **Note**: Be sure to remember this password!
 
 8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [What is Azure Synapse Link for Dataverse?](https://docs.microsoft.com/en-us/power-apps/maker/data-platform/export-to-data-lake) article in the Azure Synapse Analytics documentation.
+
+## Provision Dataverse Resource
+
+## Upload data file to dataverse
+## Mark data file for differential updates

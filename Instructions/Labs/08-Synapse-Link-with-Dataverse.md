@@ -60,7 +60,7 @@ In this exercise we're going to connect to the synapse instance and storage acco
 
 ![Azure PowerApps Dataverse](./images/open-dataverse.png)
 
-3. Select the #Select Synapse Link#.
+3. Select the Select Synapse Link.
 
 ![Azure Synapse Link Selection](./images/select-synapse-link.png)
 

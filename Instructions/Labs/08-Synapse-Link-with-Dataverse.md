@@ -51,16 +51,15 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 ## Provision Dataverse Resource
 
 In this exercise we're going to connect to the synapse instance and storage account in the resource group we just created. 
-[!Warning]
-> The system only currently supports the use of East US, East US 2, and East US 2 EAUP regions.
-> which may impact your ability to complete this portion of the lab.
+> [!IMPORTANT]
+> The system only currently supports the use of East US, East US 2, and East US 2 EAUP regions for storage accounts which may impact your ability to complete  this portion of the lab.
 
 1. Sign into [PowerApps](https://make.preview.powerapps.com/)
 2. Expand the Dataverse section:
 
 ![Azure PowerApps Dataverse](./images/open-dataverse.png)
 
-3. Select the Select Synapse Link.
+3. Select the **Select Synapse Link**.
 
 ![Azure Synapse Link Selection](./images/select-synapse-link.png)
 

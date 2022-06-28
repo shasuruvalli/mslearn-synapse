@@ -63,5 +63,20 @@ In this exercise we're going to connect to the synapse instance and storage acco
 
 ![Azure Synapse Link Selection](./images/select-synapse-link.png)
 
+4. select **New Link**.
+
+![Azure select new link](./images/select-new-link.png)
+
+5. select the button under *Select Storage Account* named **Connect to your Azure Synapse Analytics Workspace**.
+6. In the drop-down under *Subscription*, select the subscription you provisioned the Azure Resources.
+7. In the drop-down under *Resource Group*, select the resource group that starts with **dp000-** 
+   
+> [!NOTE]
+> You can refer to the powershell output for the full name of the randomly generated number.
+
+8. Once you select the *Resource Group*, you should see the *Workspace name* and *Storage account* populate automatically.
+   
+![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
+
 ## Upload data file to dataverse
 ## Mark data file for differential updates

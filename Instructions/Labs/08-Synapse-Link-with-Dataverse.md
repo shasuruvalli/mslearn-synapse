@@ -4,7 +4,7 @@ lab:
     module: 'Use Azure Synapse Link'
 ---
 
-# Use Azure Synapse Link for SQL
+# Use Azure Synapse Link for Dataverse
 
 Azure Synapse Link for Dataverse enables you to automatically synchronize a structure in dataverse  with a dedicated SQL pool in Azure Synapse Analytics. This synchronization enables you to perform low-latency analytical workloads in Synapse Analytics without incurring query overhead in the source operational database.
 

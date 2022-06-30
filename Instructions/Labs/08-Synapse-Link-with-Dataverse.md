@@ -80,6 +80,10 @@ In this exercise we're going to connect to the synapse instance and storage acco
    
 ![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
 
+9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
+
+![Azure select Dataverse table to link](./images/select-table-to-link.png)
+10. 
 ## Delete Azure resources
 
 If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
@@ -92,8 +96,3 @@ If you've finished exploring Azure Synapse Analytics, you should delete the reso
 
     After a few minutes, your resource group and the resources it contained will be deleted.
 
-| Migration type | Solution | Considerations |
-
-| :--- | :---: | :--- |
-
-| Online | Azure Database Migration Service | >+ Makes use of the Azure Cosmos DB bulk executor library >+ Suitable for large datasets and takes care of replicating live changes >+ Works only with other MongoDB sources |

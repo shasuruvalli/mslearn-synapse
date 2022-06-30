@@ -108,8 +108,8 @@ In this exercise we're going to connect to the synapse instance and storage acco
 9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 
 ![Azure select Dataverse table to link](./images/select-table-to-link.png)
-10. 
-## Delete Azure resources
+
+## Delete Azure resources ##
 
 If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
 

@@ -14,6 +14,8 @@ This lab will take approximately **35** minutes to complete.
 
 You'll need an [Azure subscription](https://azure.microsoft.com/free) in which you have administrative-level access.
 
+You'll need to setup or have access with appropriate permissions to a Dataverse Table which can be accomplished by using the [Create tables in Dataverse module.](https://docs.microsoft.com/en-us/learn/modules/get-started-with-powerapps-common-data-service/)
+
 ## Provision Azure resources
 
 In this exercise, you'll synchronize data from an Azure SQL Database resource to an Azure Synapse Analytics workspace. You'll start by using a script to provision these resources in your Azure subscription.
@@ -89,3 +91,9 @@ If you've finished exploring Azure Synapse Analytics, you should delete the reso
 5. Enter the **dp000-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
 
     After a few minutes, your resource group and the resources it contained will be deleted.
+
+| Migration type | Solution | Considerations |
+
+| :--- | :---: | :--- |
+
+| Online | Azure Database Migration Service | >+ Makes use of the Azure Cosmos DB bulk executor library >+ Suitable for large datasets and takes care of replicating live changes >+ Works only with other MongoDB sources |

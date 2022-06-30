@@ -108,11 +108,38 @@ In this exercise we're going to connect to the synapse instance and storage acco
 9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 
 ![Azure select Dataverse table to link](./images/select-table-to-link.png)
-## Query the Dataverse table in Synapse Analytics##
+## Query the Dataverse table in Synapse Analytics ##
 
 1. If not already done, Sign into the [Azure portal](https://portal.azure.com).
-2. Navigate to the resource group that you've been working with.
-   
+2. Navigate to the resource group that you've been working with and select your Synapse instance in the Resource Group list.
+> [!NOTE]
+> You will likely be prompted for your credentials which should be cached. Be sure to enter the credentials that you have used to set everything up.
+
+![Select Azure Synapse Studio](.images/../images/open-synapse-studio.png)
+
+3. Select the Data icon in the left pane.
+
+![select the data icon](./images/select-data-icon-in-left-panel.png)
+
+4. In the **Data** blade, expand the **Lake database**.
+5. Expand the **dataverse_<your assigned key>** database.
+6. Expand the **tables** which will display the dataverse tables that have been replicated to Synapse.
+
+![select the lake database and expand tables](./images/select-lake-database-expand-tables.png)
+
+
+7. By mousing over the <systemid>_petname table you will see an elipses (...) on the right-hand side
+8. select ***New SQL Script***, then ***Select TOP 100 rows***
+
+![select top 100 rows](./images/select-top-100-rows.png)
+
+9. Select **Run**.
+
+![select run button to execute query](./images/select-run.png)
+
+> [!NOTE]
+> You will see all of the records including auditing records for the table that you created in the Dataverse Creation Exercise.
+> 
 
 ## Delete Azure resources ##
 

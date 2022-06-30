@@ -48,18 +48,18 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
     > **Note**: Be sure to remember this password!
 
-8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [What is Azure Synapse Link for Dataverse?](https://docs.microsoft.com/en-us/power-apps/maker/data-platform/export-to-data-lake) article in the Azure Synapse Analytics documentation.
+8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you're waiting, review the [What is Azure Synapse Link for Dataverse?](https://docs.microsoft.com/en-us/power-apps/maker/data-platform/export-to-data-lake) article in the Azure Synapse Analytics documentation.
 
 ## Configure Storage Account for Owner Access ##
 > **[!IMPORTANT]**
 > The system administrator in your organization should determine and assign appropriate permissions to create and update dataverse tables with Synapse storage accounts. This is for demonstration purposes and assumes you have appropriate permissions to *add user* to your **role assignments**
 
-1. Navigate back to your portal and open the resource group that was just created for you.
-2. In the Resource group select the datalake within the resource group.
+1. Navigate back to your portal and open the resource group that was created for you.
+2. In the Resource group, select the data lake within the resource group.
 
 ![navigation to datalake in Azure Portal](./images/set-datalake-security-iam.png)
 
-3. Next, select **Access Contrl (IAM)** in the left pane of the portal. If you pane is not showing, click on the *hamburger* icon in the top left of the portal which appear as three horizontal lines.
+3. Next, select **Access Control (IAM)** in the left pane of the portal. If your pane isn't showing, select on the *hamburger* icon in the top left of the portal, which appear as three horizontal lines.
 
 ![select access control IAM settings](.images/../images/select-access-control.png)
 
@@ -67,11 +67,11 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
 ![click add role assignment](./images/add-role-assignment.png)
 
-5. In the **Add Role Assignment** blade, select the **owner** under the column **name** and then click **Next**.
+5. In the **Add Role Assignment** blade, select the **owner** under the column **name** and then select **Next**.
 
 ![select owner as the assigned role](./images/select-owner-click-next.png)
 
-6. On the next blade within **Add Role Assignment** you will see a blade named, **Select Members**. Type in the email address that you were assigned and will be using in PowerApps to establish the connection between Synapse and Dataverse.
+6. On the next blade within **Add Role Assignment** you'll see a blade named, **Select Members**. Type in the email address that you were assigned and will be using in PowerApps to establish the connection between Synapse and Dataverse.
 
 ![add member name to owner role assignment](./images/assign-permissions.png)
 

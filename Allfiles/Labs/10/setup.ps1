@@ -71,7 +71,7 @@ while ($complexPassword -ne 1)
 Write-Host "Registering resource providers...";
 $provider_list = "Microsoft.Synapse", "Microsoft.Purview", "Microsoft.Sql", "Microsoft.Storage", "Microsoft.Compute"
 foreach ($provider in $provider_list){
-    $result = Register-AzResourceProvider -ProviderNamespace provider
+    $result = Register-AzResourceProvider -ProviderNamespace $provider
     while ($result.RegistrationState -eq "Registering") {
         
         Start-Sleep -Seconds 3

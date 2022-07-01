@@ -46,5 +46,19 @@ In this exercise, you'll use Microsoft Purview to track assets and data lineage 
 
     > **Note**: Be sure to remember this password!
 
-8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [What is Azure Synapse Link for SQL?](https://docs.microsoft.com/azure/synapse-analytics/synapse-link/sql-synapse-link-overview) article in the Azure Synapse Analytics documentation.
+8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [What's available in the Microsoft Purview governance portal?](https://docs.microsoft.com/azure/purview/overview) article in the Microsoft Purview documentation.
+
+## Catalog Azure Synapse Analytics data assets
+
+With Microsoft Purview, you can catalog data assets across your data estate - including data sources in an Azure Synapse Workspace. The workspace you deployed using a script includes a data lake (in an Azure Data Lake Storage Gen2 account), a serverless database, and a data warehouse in a dedicated SQL pool.
+
+### Configure access permissions for Microsoft Purview
+
+Microsoft Purview is configured to use a managed identity. In order to catalog data assets, this managed identity account must have access to the Azure Synapse Analytics workspace and any SQL databases it contains.
+
+1. In the [Azure portal](https://portal.azure.com), browse to the **dp000-*xxxxxxx*** resource group that was created by the setup script and view the resources that it created. These include:
+    - A storage account with a name similar to **datalake*xxxxxxx***.
+    - A Microsoft Purview account with a name similar to **purview*xxxxxxx***.
+    - A dedicated SQL pool with a name similar to **sql*xxxxxxx***.
+    - A Synapse workspace with a name similar to **synapse*xxxxxxx***.
 

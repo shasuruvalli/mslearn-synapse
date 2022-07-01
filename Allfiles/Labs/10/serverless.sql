@@ -4,6 +4,10 @@ GO
 USE lakedb;
 GO
 
+CREATE CREDENTIAL [https://datalakexxxxxxx.dfs.core.windows.net/files/products/products.csv]
+WITH IDENTITY='Managed Identity';
+GO
+
 CREATE VIEW products_csv
 AS
 SELECT *
@@ -13,4 +17,5 @@ FROM
         FORMAT = 'CSV',
         HEADER_ROW = TRUE,
         PARSER_VERSION = '2.0'
-    ) AS [result]
+    ) AS [result];
+GO

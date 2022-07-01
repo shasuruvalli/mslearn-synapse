@@ -216,7 +216,7 @@
         "type": "Microsoft.Purview/accounts",
         "apiVersion": "2021-12-01",
         "name": "[parameters('purviewAccountName')]",
-        "location": "[variables('location')",
+        "location": "[variables('location')]",
         "sku": {
             "name": "Standard",
             "capacity": 1

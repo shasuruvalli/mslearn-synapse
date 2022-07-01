@@ -73,6 +73,7 @@ Register-AzResourceProvider -ProviderNamespace Microsoft.Synapse
 Register-AzResourceProvider -ProviderNamespace Microsoft.Sql
 Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
 Register-AzResourceProvider -ProviderNamespace Microsoft.Compute
+Register-AzResourceProvider -ProviderNamespace Microsoft.Purview
 
 # Generate unique random suffix
 [string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
@@ -89,6 +90,7 @@ $locations = Get-AzLocation | Where-Object {
     $_.Providers -contains "Microsoft.Sql" -and
     $_.Providers -contains "Microsoft.Storage" -and
     $_.Providers -contains "Microsoft.Compute" -and
+    $_.Providers -contains "Microsoft.Purview" -and
     $_.Location -in $preferred_list
 }
 $max_index = $locations.Count - 1

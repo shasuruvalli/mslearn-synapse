@@ -59,7 +59,7 @@ In this exercise, you'll synchronize data from an Azure SQL Database resource to
 
 ![navigation to datalake in Azure Portal](./images/set-datalake-security-iam.png)
 
-3. Next, select **Access Control (IAM)** in the left pane of the portal. If your pane isn't showing, select on the *hamburger* icon in the top left of the portal, which appear as three horizontal lines.
+3. Next, select **Access Control (IAM)** in the left pane of the portal. If your pane isn't showing, select on the &#9776; icon in the top left of the portal, which appear as three horizontal lines.
 
 ![select access control IAM settings](.images/../images/select-access-control.png)
 

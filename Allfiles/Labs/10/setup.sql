@@ -1,13 +1,10 @@
-﻿SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Products](
+﻿-- Create a table
+CREATE TABLE [dbo].[products](
 	[ProductID] [int] NOT NULL,
-	[ProductName] [nvarchar(50)] NOT NULL,
-	[Category] [nvarchar(50)] NOT NULL,
-	[ListPrice] [money] NULL
-)
+	[ProductName] [nvarchar(100)] NOT NULL,
+	[Category] [nvarchar(100)] NOT NULL,
+	[ListPrice] [decimal] NULL
+);
 GO
 
 

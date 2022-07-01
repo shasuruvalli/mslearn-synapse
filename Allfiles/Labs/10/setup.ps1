@@ -70,10 +70,10 @@ while ($complexPassword -ne 1)
 # Register resource providers
 Write-Host "Registering resource providers...";
 Register-AzResourceProvider -ProviderNamespace Microsoft.Synapse
+Register-AzResourceProvider -ProviderNamespace Microsoft.Purview
 Register-AzResourceProvider -ProviderNamespace Microsoft.Sql
 Register-AzResourceProvider -ProviderNamespace Microsoft.Storage
 Register-AzResourceProvider -ProviderNamespace Microsoft.Compute
-Register-AzResourceProvider -ProviderNamespace Microsoft.Purview
 
 # Generate unique random suffix
 [string]$suffix =  -join ((48..57) + (97..122) | Get-Random -Count 7 | % {[char]$_})
@@ -159,8 +159,12 @@ New-AzRoleAssignment -Objectid $id -RoleDefinitionName "Storage Blob Data Owner"
 New-AzRoleAssignment -SignInName $userName -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" -ErrorAction SilentlyContinue;
 
 # Create database
-write-host "Creating the $sqlDatabaseName database..."
-sqlcmd -S "$synapseWorkspace.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d $sqlDatabaseName -I -i setup.sql
+write-host "Creating databases..."
+$serverlessSQL = Get-Content -Path "serverless.sql" -Raw
+$serverlessSQL = $serverlessSQL.Replace("datalakexxxxxxx", $dataLakeAccountName)
+Set-Content -Path "serverless.sql" -Value $serverlessSQL
+sqlcmd -S "$synapseWorkspace-ondemand.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d master -I -i serverless.sql
+sqlcmd -S "$synapseWorkspace.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d $sqlDatabaseName -I -i dedicated.sql
 
 # Upload files
 write-host "Loading data..."

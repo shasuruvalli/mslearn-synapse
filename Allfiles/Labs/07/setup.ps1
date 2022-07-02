@@ -63,7 +63,7 @@ while ($complexPassword -ne 1)
     }
     else
     {
-        Write-Output "$SqlPassword does not meet the compexity requirements."
+        Write-Output "$SqlPassword does not meet the complexity requirements."
     }
 }
 

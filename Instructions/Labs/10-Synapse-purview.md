@@ -75,8 +75,8 @@ Microsoft Purview is configured to use a managed identity. In order to catalog d
 
     ![A screenshot of the Select managed identities tab.](./images/storage-role-members.png)
 
-7. Use the **Review + Assign** button to complete the role assignment, which makes the **purview*xxxxxxx***account used by the managed identity for your Microsoft Purview resource a member of the **Storage Blob Data Reader** role for your storage account.
-8. In the Azure portal, return to the **dp000-*xxxxxxx*** resource group and open the **synapse*xxxxxxx*** Synapse Analytics workspace. Then, on its **Access Control (IAM)** page, adda  role assignment to make the **purview*xxxxxxx*** managed identity account a member of the **Reader** role in the workspace.
+7. Use the **Review + Assign** button to complete the role assignment, which makes the **purview*xxxxxxx*** account used by the managed identity for your Microsoft Purview resource a member of the **Storage Blob Data Reader** role for your storage account.
+8. In the Azure portal, return to the **dp000-*xxxxxxx*** resource group and open the **synapse*xxxxxxx*** Synapse Analytics workspace. Then, on its **Access Control (IAM)** page, add a role assignment to make the **purview*xxxxxxx*** managed identity account a member of the **Reader** role in the workspace.
 
 ### Configure database permissions for Microsoft Purview
 

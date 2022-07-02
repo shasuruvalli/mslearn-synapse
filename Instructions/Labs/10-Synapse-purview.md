@@ -188,7 +188,7 @@ Azure Synapse Analytics supports integration with Microsoft Purview to track dat
 
 ### Enable Microsoft Purview integration in Azure Synapse Analytics
 
-1. Switch back to the browser tab containing Synapse Studio, and on the **Manage** page, select the **Microsoft Purview** tab, and then use the **Connect to a Purview account** button to connect your **purview*xxxxxxx*** account to the workspace.
+1. Switch back to the browser tab containing Synapse Studio, and on the **Manage** page, select the **Microsoft Purview** tab, and then use the **Connect to a Purview account** button to connect the **purview*xxxxxxx*** account in your subscription to the workspace.
 2. After connecting the account, view the **Purview account** tab to verify that the account is has a **Data Lineage - Synapse Pipeline** status of **Connected**:
 
     ![A screenshot showing the Purview account in Synapse Studio.](./images/synapse-purview.png)
@@ -210,20 +210,24 @@ The **products** table in the **sql*xxxxxxx*** dedicated SQL database is current
 6. On the **Column mapping** page, review the default column mappings and then select **Next**.
 7. On the **Settings** page, set the **Task name** to **Load_Product_Data**. Then select the **Bulk insert** copy method and select **Next**.
 8. On the **Summary** page, select **Next**.
-9. Wait foe the pipeline to be deployed, and then select **Finish**.
-10. On the **Monitor** page, on the **Pipeline runs** tab, observe the status of the **Load_Product_Data** pipeline. It may take a few minutes for the status to change to **Succeeded**. When this happens, the pipeline has been successfully run and the data from the text file in the data lake has been loaded into the **products** table in the **sql*xxxxxxx*** database.
-11. On the **Integrate** page, expand **Pipelines** and select the **Load_Product_Data** pipeline to view it in the graphical pipeline designer; and observe that the pipeline includes a Copy Data task with an automatically-derived name similar to **Copy_*xxx***.
+9. Wait for the pipeline to be deployed, and then select **Finish**.
+10. In Synapse Studio, view the **Monitor** page. Then on the **Pipeline runs** tab, observe the status of the **Load_Product_Data** pipeline. It may take a few minutes for the status to change to **Succeeded**.
+11. When the pipeline run has completed successfully, select its name (**Load_Product_Data**) to view details of the activities in the pipeline; and observe that the pipeline includes a **Copy data** task with an automatically-derived name similar to **Copy_*xxx***. This activity copied the data from the text file in the data lake into the **products** table in the **sql*xxxxxxx*** database.
 
 ### View data lineage in Microsoft Purview
 
 You've used a Synapse pipeline to load data into a database. Let's verify that this activity has been tracked in Microsoft Purview.
 
 1. Switch to the browser tab containing the Microsoft Purview Governance Portal.
-2. On the **data catalog** page, on the **Browse** sub-page, select the **purview*xxxxxxx*** collection.
-3. Filter the assets to show only **data pipelines**. The list of assets should include the **Copy_*xxx*** Copy Data task from the **Load_Product_Data** pipeline you ran previously.
-4. Select the **Copy_*xxx*** asset to view its details, and on the **Lineage** tab, view the details recorded about the source and target:
+2. On the **Data catalog** page, on the **Browse** sub-page, select the **purview*xxxxxxx*** collection.
+3. Filter the assets to show only **Data pipelines**, **Files**, and **Tables**. The list of assets should include the **products.csv** file, the **Copy_*xxx*** pipeline activity, and the **products** table.
+4. Select the **Copy_*xxx*** asset to view its details, noting the **Updated time** reflects the recent pipeline run.
+5. On the **Lineage** tab for the **Copy_*xxx*** asset, view the diagram showing the data flow from the **products.csv** file to the **products** table:
 
     ![A screenshot of the Lineage tab for a pipeline asset, showing the source and target.](./images/purview-lineage.png)
+
+6. In the **Copy_*xxx*** lineage diagram, select the **products.csv** file and use its **Switch to asset** link to view details of the source file.
+7. In the **products.csv** lineage diagram, select the **products** table and use its **Switch to asset** link to view details of the table (you may need to use the **&#8635; Refresh** button to see the table lineage diagram).
 
 The lineage tracking capability enabled by integrating Azure Synapse Analytics with Microsoft Purview enables you to determine how and when the data in your data stores was loaded, and where it came from.
 

@@ -6,9 +6,9 @@ lab:
 
 # Use Microsoft Purview with Azure Synapse Analytics
 
-Microsoft Purview enables you to catalog data assets across your data estate and track the *lineage* of data as it is moved from one data source to another. Close integration with Azure Synapse Analytics enables you to use Microsoft Purview to track the data assets in your analytical environment - a key element of a comprehensive data governance solution.
+Microsoft Purview enables you to catalog data assets across your data estate and track the flow of data as it is transferred from one data source to another - a key element of a comprehensive data governance solution.
 
-This lab will take approximately **45** minutes to complete.
+This lab will take approximately **35** minutes to complete.
 
 ## Before you start
 

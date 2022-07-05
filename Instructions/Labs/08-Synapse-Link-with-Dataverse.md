@@ -108,11 +108,11 @@ In this exercise we're going to connect to the synapse instance and storage acco
 ## Create Dataverse Table ##
 2. Select **dataverse** then select **new table**.
 
- ![select PowerApps and Create New Table](./images/new-table.png)
+ ![Select PowerApps and Create New Table](./images/new-table.png)
 
 4. This will bring up the blade, named **new table**.
 
- ![edit the Power Apps New Table Blade](.images/new-table-blade.png)
+ ![Edit the Power Apps New Table Blade](./images/new-table-blade.png)
 
 5. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 

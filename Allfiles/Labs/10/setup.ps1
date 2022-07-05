@@ -179,8 +179,8 @@ Get-ChildItem "./data/*.csv" -File | Foreach-Object {
 write-host "Creating databases..."
 $serverlessSQL = Get-Content -Path "serverless.sql" -Raw
 $serverlessSQL = $serverlessSQL.Replace("datalakexxxxxxx", $dataLakeAccountName)
-Set-Content -Path "serverless.sql" -Value $serverlessSQL
-sqlcmd -S "$synapseWorkspace-ondemand.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d master -I -i serverless.sql
+Set-Content -Path "serverless$suffix.sql" -Value $serverlessSQL
+sqlcmd -S "$synapseWorkspace-ondemand.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d master -I -i serverless$suffix.sql
 sqlcmd -S "$synapseWorkspace.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d $sqlDatabaseName -I -i dedicated.sql
 
 

@@ -8,7 +8,7 @@ lab:
 
 Microsoft Purview enables you to catalog data assets across your data estate and track the flow of data as it is transferred from one data source to another - a key element of a comprehensive data governance solution.
 
-This lab will take approximately **35** minutes to complete.
+This lab will take approximately **40** minutes to complete.
 
 ## Before you start
 
@@ -125,9 +125,9 @@ Your Azure Synapse Analytics workspace includes databases in both *serverless* a
     GO
     ```
 
-### Add Azure Synapse Analytics assets to the Microsoft Purview catalog
+### Register sources in the Microsoft Purview catalog
 
-Now that you've configured the required access for Microsoft Purview to scan the data sources in your Azure Synapse Analytics workspace, you can add the workspace to your Microsoft Purview catalog.
+Now that you've configured the required access for Microsoft Purview to scan the data sources used by your Azure Synapse Analytics workspace, you can register them in your Microsoft Purview catalog.
 
 1. Switch back to the browser tab containing the Azure portal, and view the page for the **dp000-*xxxxxxx*** resource group.
 2. Open the **purview*xxxxxxx*** Microsoft Purview account, and on its **Overview** page, use the link to open the **Microsoft Purview Governance Portal** ina  new browser tab - signing in if prompted.
@@ -146,12 +146,25 @@ Now that you've configured the required access for Microsoft Purview to scan the
     - **Dedicated SQL endpoint**: sql*xxxxxxx*.sql.azuresynapse.net
     - **Serverless SQL endpoint**: sql*xxxxxxx*-ondemand.sql.azuresynapse.net
     - **Select a collection**: Root (purview*xxxxxxx*)
-6. After registering the **Synapse_data** source, observe that it is displayed in the data map under the **purview*xxxxxxx*** root collection as shown here:
+
+    This data source includes the SQL databases in your Azure Synapse Analytics workspace.
+
+6. After registering the **Synapse_data** source, select **Register** again, and register a second source for the data lake storage used by your Azure Synapse workspace. Select **Azure Data Lake Storage Gen2**, and specify the following settings:
+    - **Name**: Data_lake
+    - **Azure subscription**: *Select your Azure subscription*
+    - **Workspace name**: *Select your **datalakexxxxxxx** storage account*
+    - **Endpoint**: https:/ /datalakexxxxxxx.dfs.core.windows.net/
+    - **Select a collection**: Root (purview*xxxxxxx*)
+    - **Data use management**: Disabled
+
+    After registering both the **Synapse_daya** and **Data_lake** sources, they should both be displayed under the **purview*xxxxxxx*** root collection in the data map as shown here:
 
     ![A screenshot of the data map, showing the Synapse_data source.](./images//purview-data-map.png)
 
-7. In the data map, in the **Synapse_data** source, select **View details**; and observe that the source has no assets cataloged. You will need to scan the source to find the data assets it contains.
-8. In the **Synapse_data** details page, select **New scan**, and then configure a scan with the following settings:
+### Scan registered sources
+
+1. In the data map, in the **Synapse_data** source, select **View details**; and observe that the source has no assets cataloged. You will need to scan the source to find the data assets it contains.
+2. In the **Synapse_data** details page, select **New scan**, and then configure a scan with the following settings:
     - **Name**: Scan-Synapse
     - **Connect to integration runtime**: Azure AutoresolveIntegrationRuntime
     - **Type**: SQL Database
@@ -161,24 +174,36 @@ Now that you've configured the required access for Microsoft Purview to scan the
 
     ![A screenshot of the New scan pane.](./images/purview-scan.png)
 
-9. Continue to the **Select a scan rule set** page, on which the default **AzureSynapseSQL** rule set should be selected.
-10. Continue to the **set a scan trigger** page, and select **Once** to run the scan one-time.
-11. Continue to the **Review your scan** page, and then save and run the scan.
-12. In the **Synapse_data** details page, observe the **Last run status** of the **Scan-Synapse** scan as it runs. The page will refresh periodically, and you can use the **&#8635; Refresh** button to force a refresh. The scan will take a few minutes to complete, and then show the count of assets discovered and automatically classified:
+3. Continue to the **Select a scan rule set** page, on which the default **AzureSynapseSQL** rule set should be selected.
+4. Continue to the **Set a scan trigger** page, and select **Once** to run the scan one-time.
+4. Continue to the **Review your scan** page, and then save and run the scan.
+6. While the **Synapse_data** scan is running, return to the **Sources** page to view the data map, and in the **Data_lake** source use the **New scan** icon to start a scan of the data lake with the following settings:
+    - **Name**: Scan-Data-Lake
+    - **Connect to integration runtime**: Azure AutoresolveIntegrationRuntime
+    - **Credential**: Microsoft Purview MSI (system)
+    - **Select a collection**: Root (purview*xxxxxxx*)
+    - **Scope your scan**: *Select **Data_lake** and all sub-assets* 
+    - **Select a scan rule set**:  AdlsGen2
+    - **Set a scan trigger**: Once
+    - **Review your scan** Save and run
+7. Wait for both scans to complete - this may take several minutes. You can view the details page for each of the sources to see the **Last run status**, as shown below (you can use the **&#8635; Refresh** button to update the status). You can also view the **Monitoring** page (though it may take some time for the scans to appear there):
 
     ![A screenshot of the Synapse_data details with a completed scan.](./images/purview-scan-complete.png)
 
-13. On the **Data catalog** page, on the **Browse** sub-page, select the **purview*xxxxxxx*** collection. Here you can see the data assets that were cataloged in your Azure Synapse Workspace, including the workspace itself, the two databases, the **dbo** schema in each database, and the tables and views in the databases.
-14. To filter the results, in the **Narrow results by** list of object types, select **Tables** so that only the tables and views that were cataloged by the scan are listed:
+### View the scanned assets
 
-    ![A screenshot of the Data catalog filtered to show only tables.](./images/purview-collection.png)
+1. On the **Data catalog** page, on the **Browse** sub-page, select the **purview*xxxxxxx*** collection. Here you can see the data assets that were cataloged in your Azure Synapse Workspace and data lake storage, including the Azure Synapse Analytics workspace, the Azure Storage account for the data lake, the two SQL pool databases in Azure Synapse Analytics, the **dbo** schema in each database, the tables and views in the databases, and the folders and files in the data lake.
+2. To filter the results, in the **Narrow results by** list of object types, select **Files** and **Tables** so that only the files, tables, and views that were cataloged by the scan are listed:
 
-    Note that the tables include:
+    ![A screenshot of the Data catalog filtered to show only files and tables.](./images/purview-collection.png)
+
+    Note that the data assets include:
 
     - **products** - a table in the dedicated SQL pool for product data.
-    - **products_csv** - a view in the serverless SQL pool that reads product data from a CSV file in the data lake.
+    - **products.csv** - a file in the data lake.
+    - **products_csv** - a view in the serverless SQL pool that reads product data from the *products.csv* file.
 
-15. Explore the tables that were found by selecting them and viewing their schema. You can find a lot of information about the data assets in your data estate by exploring them in the Microsoft Purview data catalog.
+3. Explore the assets that were found by selecting them and viewing their properties and schema. You can edit the properties of thr assets (including individual fields) to add metadata, categorizations, contact details for subject-matter experts, and other useful details so that data analysts can find a lot of information about the data assets in your data estate by exploring them in the Microsoft Purview data catalog.
 
 So far, you've used Microsoft Purview to catalog data assets in your Azure Synapse Analytics workspace. You can register multiple kinds of data source in a Microsoft Purview catalog, enabling you to create a central, consolidated view of data assets.
 
@@ -204,7 +229,7 @@ Now that you've connected your Microsoft Purview account to your Azure Synapse A
 
     ![Screenshot of the search box in Synapse Studio searching Purview.](./images/synapse-search-purview.png)
 
-3. In the results, select **products_csv** to view its details from the Purview catalog.
+3. In the results, select **products.csv** to view its details from the Purview catalog.
 
 By integrating the Purview catalog into the Synapse Studio interface, data analysts and engineers can find and examine registered data assets from across the entire data estate (not just within the Azure Synapse Studio workspace).
 

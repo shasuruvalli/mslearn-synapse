@@ -114,7 +114,22 @@ In this exercise we're going to connect to the synapse instance and storage acco
 
  ![Edit the Power Apps New Table Blade](./images/new-table-blade.png)
 
-5. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
+5. Create a table named Customer and click **Save**
+6. One the table is saved you will be broght to the table properties screen.
+![Edit table properties scree](.images/../images/edit-table-columns.png)
+7. Cick on the **+NEW** and create the following columns with their data types.
+8. 
+   - CustomerID  DataType: Autonumber
+   - Title,  DataType: Single line of text.
+   - FirstName, DataTYpe: Single line of text.
+   - MiddleName, DataType: Single line of text.
+   - LastName, DataType: Single line of text.
+   - CompanyName, DataType: Single line of text.
+   - SalesPerson,  Datatype: Single line of text.
+   - Email Address, DataType : Single line of text, Format: Email.
+   - Phone, DataType: Single line of text, Format: Phone Number.
+
+9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 
 ![Azure select Dataverse table to link](./images/select-table-to-link.png)
 ## Query the Dataverse table in Synapse Analytics ##

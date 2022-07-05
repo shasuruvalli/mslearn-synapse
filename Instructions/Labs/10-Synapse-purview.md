@@ -48,7 +48,9 @@ In this exercise, you'll use Microsoft Purview to track assets and data lineage 
 
 8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [What's available in the Microsoft Purview governance portal?](https://docs.microsoft.com/azure/purview/overview) article in the Microsoft Purview documentation.
 
-## Catalog Azure Synapse Analytics data assets
+> **Tip**: If, after running the setup script you decide not to complete the lab, be sure to delete the **dp000-*xxxxxxx*** resource group that was created in your Azure subscription to avoid unnecessary Azure costs.
+
+## Catalog Azure Synapse Analytics data assets in Microsoft Purview
 
 With Microsoft Purview, you can catalog data assets across your data estate - including data sources in an Azure Synapse Workspace. The workspace you deployed using a script includes a data lake (in an Azure Data Lake Storage Gen2 account), a serverless database, and a data warehouse in a dedicated SQL pool.
 
@@ -98,8 +100,8 @@ Your Azure Synapse Analytics workspace includes databases in both *serverless* a
 
     ![A screenshot of the Data page in Synapse Studio, listing two SQL databases,](./images/sql-databases.png)
 
-6. Select the **lakedb** database, and then in its **...** menu, select **New SQL script** > **Empty script**.
-7. In the **SQL script 1** pane that opens, enter the following SQL code, replacing all instances of ***purviewxxxxxxx*** with the managed identity name for your Microsoft Purview account:
+6. Select the **lakedb** database, and then in its **...** menu, select **New SQL script** > **Empty script** to open a new **SQL script 1** pane. You can use the **Properties** button (which looks similar to **&#128463;.**) on the right end of the toolbar to hide the **Properties** pane and see the script pane more easily.
+7. In the **SQL script 1** pane, enter the following SQL code, replacing all instances of ***purviewxxxxxxx*** with the managed identity name for your Microsoft Purview account:
 
     ```sql
     CREATE LOGIN purviewxxxxxxx FROM EXTERNAL PROVIDER;
@@ -182,9 +184,9 @@ So far, you've used Microsoft Purview to catalog data assets in your Azure Synap
 
 Now let's explore some other ways to integrate Azure Synapse Analytics and Microsoft Purview.
 
-## Track data lineage and pipeline assets
+## Integrate Microsoft Purview with Azure Synapse Analytics
 
-Azure Synapse Analytics supports integration with Microsoft Purview to track data lineage through ingestion pipelines that transfer data from one source to another.
+Azure Synapse Analytics supports integration with Microsoft Purview to make data assets discoverable and to track data lineage through ingestion pipelines that transfer data from one source to another.
 
 ### Enable Microsoft Purview integration in Azure Synapse Analytics
 
@@ -193,9 +195,22 @@ Azure Synapse Analytics supports integration with Microsoft Purview to track dat
 
     ![A screenshot showing the Purview account in Synapse Studio.](./images/synapse-purview.png)
 
+### Search the Purview catalog in Synapse Studio
+
+Now that you've connected your Microsoft Purview account to your Azure Synapse Analytics workspace, you can search the catalog from Synapse Studio, enabling you to discover data assets across your data estate.
+
+1. In Synapse Studio, view the **Integrate** page.
+2. At the top of the page, use the **Search** box at the top to search the **Purview** source for the term "products", as shown here:
+
+    ![Screenshot of the search box in Synapse Studio searching Purview.](./images/synapse-search-purview.png)
+
+3. In the results, select **products_csv** to view its details from the Purview catalog.
+
+By integrating the Purview catalog into the Synapse Studio interface, data analysts and engineers can find and examine registered data assets from across the entire data estate (not just within the Azure Synapse Studio workspace).
+
 ### Create and run a pipeline
 
-The **products** table in the **sql*xxxxxxx*** dedicated SQL database is currently empty. Let's use a Synapse pipeline to load data from the data lake into the table.
+The **products_csv** view in the **lakedb** database is based on a text file in the data lake that contains product data. The **products** table in the **sql*xxxxxxx*** dedicated SQL database is currently empty. Let's use a Synapse pipeline to load data from the data lake into the table.
 
 1. In Synapse Studio, on the **Integrate** page, in the **+** menu, select **Copy Data tool**.
 2. In the Copy Data tool, select **Built-in copy task**, and **Run once now**, and then select **Next**.
@@ -230,6 +245,8 @@ You've used a Synapse pipeline to load data into a database. Let's verify that t
 7. In the **products.csv** lineage diagram, select the **products** table and use its **Switch to asset** link to view details of the table (you may need to use the **&#8635; Refresh** button to see the table lineage diagram).
 
 The lineage tracking capability enabled by integrating Azure Synapse Analytics with Microsoft Purview enables you to determine how and when the data in your data stores was loaded, and where it came from.
+
+> **Tip**: In this exercise, you viewed the lineage information for in the Microsoft Purview Governance portal; but remember that the same assets can also be viewed in Synapse Studio through the search integration feature.
 
 ### Pause the dedicated SQL pool
 

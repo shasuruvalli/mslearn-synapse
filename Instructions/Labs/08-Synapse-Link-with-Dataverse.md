@@ -96,16 +96,25 @@ In this exercise we're going to connect to the synapse instance and storage acco
 
 5. select the button under *Select Storage Account* named **Connect to your Azure Synapse Analytics Workspace**.
 6. In the drop-down under *Subscription*, select the subscription you provisioned the Azure Resources.
-7. In the drop-down under *Resource Group*, select the resource group that starts with **dp000-** 
+7. In the drop-down under *Resource Group*, select the resource group that starts with **dp000-**. 
    
 > [!NOTE]
 > You can refer to the powershell output for the full name of the randomly generated number.
 
 8. Once you select the *Resource Group*, you should see the *Workspace name* and *Storage account* populate automatically.
    
-![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
+  ![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
 
-9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
+## Create Dataverse Table ##
+2. Select **dataverse** then select **new table**.
+
+ ![PowerApps Create New Table](./images/new-table.png)
+
+4. This will bring up the blade, named **new table**.
+
+ ![Power Apps New Table Blade model](.images/new-table-blade.png)
+
+5. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 
 ![Azure select Dataverse table to link](./images/select-table-to-link.png)
 ## Query the Dataverse table in Synapse Analytics ##

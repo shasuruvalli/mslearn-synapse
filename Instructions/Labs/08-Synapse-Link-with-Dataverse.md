@@ -96,14 +96,38 @@ In this exercise we're going to connect to the synapse instance and storage acco
 
 5. select the button under *Select Storage Account* named **Connect to your Azure Synapse Analytics Workspace**.
 6. In the drop-down under *Subscription*, select the subscription you provisioned the Azure Resources.
-7. In the drop-down under *Resource Group*, select the resource group that starts with **dp000-** 
+7. In the drop-down under *Resource Group*, select the resource group that starts with **dp000-**. 
    
 > [!NOTE]
 > You can refer to the powershell output for the full name of the randomly generated number.
 
 8. Once you select the *Resource Group*, you should see the *Workspace name* and *Storage account* populate automatically.
    
-![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
+  ![Azure select new link](./images/connect-to-azure-synapse-analytics-workspace.png)
+
+## Create Dataverse Table ##
+2. Select **dataverse** then select **new table**.
+
+ ![Select PowerApps and Create New Table](./images/new-table.png)
+
+4. This will bring up the blade, named **new table**.
+
+ ![Edit the Power Apps New Table Blade](./images/new-table-blade.png)
+
+5. Create a table named Customer and click **Save**
+6. One the table is saved you will be broght to the table properties screen.
+![Edit table properties scree](.images/../images/edit-table-columns.png)
+7. Cick on the **+NEW** and create the following columns with their data types.
+8. 
+   - CustomerID  DataType: Autonumber
+   - Title,  DataType: Single line of text.
+   - FirstName, DataTYpe: Single line of text.
+   - MiddleName, DataType: Single line of text.
+   - LastName, DataType: Single line of text.
+   - CompanyName, DataType: Single line of text.
+   - SalesPerson,  Datatype: Single line of text.
+   - Email Address, DataType : Single line of text, Format: Email.
+   - Phone, DataType: Single line of text, Format: Phone Number.
 
 9. The next step is to select the table to link, if you followed the directions from the pre-requesites, you will have a *Pet Name* table, select this table and then click **Save**
 

@@ -94,7 +94,7 @@ Now that you have explored some of the more important aspects of the data wareho
 Numeric values in a relational data warehouse are stored in fact tables with related dimension tables that you can use to aggregate the data across multiple attributes. This design means that most queries in a relational data warehouse involve aggregating and grouping data (using aggregate functions and GROUP BY clauses) across related tables (using JOIN clauses).
 
 1. On the **Data** page, select the **sql*xxxxxxx*** SQL pool and in its **...** menu, select **New SQL script** > **Empty script**.
-2. When a new **SQL Script 1** tab opens, in its **Properties** pane, change the name of the script to **Analyze Internet Sales** and change the **Result settings per query** to return all rows. Then use the **Publish** button on the toolbar to save the script, and use the **Properties** button (which looks similar to **&#128463;.**) on the right end of the toolbar to close the **Properties** pane so you can see the script pane.
+2. When a new **SQL Script 1** tab opens, in its **Properties** pane, change the name of the script to **Analyze Internet Sales** and change the **Result settings per query** to return all rows. Then use the **Publish** button on the toolbar to save the script, and use the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) on the right end of the toolbar to close the **Properties** pane so you can see the script pane.
 3. In the empty script, add the following code:
 
     ```sql

@@ -142,7 +142,7 @@ Now you're ready to configure Azure Synapse Link for SQL in your Synapse Analyti
     - **Link connection name**: sql-adventureworkslt-conn
     - **Core count**: 4 (+ 4 Driver cores)
 
-2. In the **sql-adventureworkslt-conn** page that is created, view the table mappings that have been created. You can use the **Properties** button (which looks similar to **&#128463;.**) hide the **Properties** pane to make it easier to see eveything. Some target tables display an error because the data in the source table is not compatible with the default structure type of *clustered columnstore index*.
+2. In the **sql-adventureworkslt-conn** page that is created, view the table mappings that have been created. You can use the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) hide the **Properties** pane to make it easier to see eveything. Some target tables display an error because the data in the source table is not compatible with the default structure type of *clustered columnstore index*.
 3. Modify the table mappings as follows:
 
     | Source table | Target table | Distribution type | Distribution column | Structure type |

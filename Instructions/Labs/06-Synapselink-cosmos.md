@@ -176,7 +176,7 @@ Now you're ready to query your Cosmos DB database from Azure Synapse Analytics.
 
     Since this is the first time you've run any Spark code in this session, the Spark pool must be started. This means that the first run in the session can take a few minutes. Subsequent runs will be quicker.
 
-3. While you are waiting for the Spark session to initialize, review the code that was generated (you can use the **Properties** button, which looks similar to **&#128463;.**, on the right end of the toolbar to close the **Properties** pane so you can see the code more clearly). The code should look similar to this:
+3. While you are waiting for the Spark session to initialize, review the code that was generated (you can use the **Properties** button, which looks similar to **&#128463;<sub>*</sub>**, on the right end of the toolbar to close the **Properties** pane so you can see the code more clearly). The code should look similar to this:
 
     ```python
     # Read from Cosmos DB analytical store into a Spark DataFrame and display 10 rows from the DataFrame

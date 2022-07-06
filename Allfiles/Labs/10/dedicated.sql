@@ -7,3 +7,6 @@ CREATE TABLE dbo.products(
 );
 GO
 
+PRINT 'products table created.';
+GO
+

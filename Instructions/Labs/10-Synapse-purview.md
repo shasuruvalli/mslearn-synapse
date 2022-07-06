@@ -203,7 +203,7 @@ Now that you've configured the required access for Microsoft Purview to scan the
     - **products.csv** - a file in the data lake.
     - **products_csv** - a view in the serverless SQL pool that reads product data from the *products.csv* file.
 
-3. Explore the assets that were found by selecting them and viewing their properties and schema. You can edit the properties of thr assets (including individual fields) to add metadata, categorizations, contact details for subject-matter experts, and other useful details so that data analysts can find a lot of information about the data assets in your data estate by exploring them in the Microsoft Purview data catalog.
+3. Explore the assets that were found by selecting them and viewing their properties and schema. You can edit the properties of the assets (including individual fields) to add metadata, categorizations, contact details for subject-matter experts, and other useful details so that data analysts can find a lot of information about the data assets in your data estate by exploring them in the Microsoft Purview data catalog.
 
 So far, you've used Microsoft Purview to catalog data assets in your Azure Synapse Analytics workspace. You can register multiple kinds of data source in a Microsoft Purview catalog, enabling you to create a central, consolidated view of data assets.
 

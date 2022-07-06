@@ -130,7 +130,7 @@ Your Azure Synapse Analytics workspace includes databases in both *serverless* a
 Now that you've configured the required access for Microsoft Purview to scan the data sources used by your Azure Synapse Analytics workspace, you can register them in your Microsoft Purview catalog.
 
 1. Switch back to the browser tab containing the Azure portal, and view the page for the **dp000-*xxxxxxx*** resource group.
-2. Open the **purview*xxxxxxx*** Microsoft Purview account, and on its **Overview** page, use the link to open the **Microsoft Purview Governance Portal** ina  new browser tab - signing in if prompted.
+2. Open the **purview*xxxxxxx*** Microsoft Purview account, and on its **Overview** page, use the link to open the **Microsoft Purview Governance Portal** in a  new browser tab - signing in if prompted.
 
     >**Tip**: Alternatively, you can browse directly to https://web.purview.azure.com in a new browser tab.
 

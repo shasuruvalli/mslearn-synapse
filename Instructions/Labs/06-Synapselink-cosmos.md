@@ -18,7 +18,7 @@ You'll need an [Azure subscription](https://azure.microsoft.com/free) in which y
 
 To explore Azure Synapse Link for Cosmos DB, you'll need an Azure Synapse Analytics workspace and an Azure Cosmos DB account. In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision these resources in your Azure subscription.
 
-1. Sign into the [Azure portal](https://portal.azure.com).
+1. Sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
 2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
     ![Azure portal with a cloud shell pane](./images/cloud-shell.png)

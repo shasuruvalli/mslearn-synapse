@@ -157,7 +157,7 @@ Now that you've configured the required access for Microsoft Purview to scan the
     - **Select a collection**: Root (purview*xxxxxxx*)
     - **Data use management**: Disabled
 
-    After registering both the **Synapse_daya** and **Data_lake** sources, they should both be displayed under the **purview*xxxxxxx*** root collection in the data map as shown here:
+    After registering both the **Synapse_data** and **Data_lake** sources, they should both be displayed under the **purview*xxxxxxx*** root collection in the data map as shown here:
 
     ![A screenshot of the data map, showing the Synapse_data source.](./images//purview-data-map.png)
 

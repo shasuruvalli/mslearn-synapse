@@ -148,6 +148,7 @@ az ml workspace create --name $amlWorkspace --resource-group $resourceGroupName 
 # Create Synapse workspace
 $synapseWorkspace = "synapse$suffix"
 $dataLakeAccountName = "datalake$suffix"
+$sparkPool = "spark$suffix"
 
 write-host "Creating $synapseWorkspace Synapse Analytics workspace in $resourceGroupName resource group..."
 New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
@@ -155,6 +156,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
   -Mode Incremental `
   -workspaceName $synapseWorkspace `
   -dataLakeAccountName $dataLakeAccountName `
+  -sparkPoolName $sparkPool `
   -sqlUser $sqlUser `
   -sqlPassword $sqlPassword `
   -uniqueSuffix $suffix `

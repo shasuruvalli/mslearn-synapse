@@ -142,7 +142,7 @@ New-AzResourceGroup -Name $resourceGroupName -Location $Region | Out-Null
 
 # Create Azure Machine Learning workspace
 $amlWorkspace = "aml$suffix"
-Write-Host "Creating $amlWorkspace Azure Machine Learning workspace in write-host in $resourceGroupName resource group..."
+Write-Host "Creating $amlWorkspace Azure Machine Learning workspace in $resourceGroupName resource group..."
 az ml workspace create --name $amlWorkspace --resource-group $resourceGroupName --no-wait
 
 # Create Synapse workspace

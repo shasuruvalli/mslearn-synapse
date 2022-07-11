@@ -152,7 +152,7 @@ $dataLakeAccountName = "datalake$suffix"
 write-host "Creating $synapseWorkspace Synapse Analytics workspace in $resourceGroupName resource group..."
 New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
   -TemplateFile "setup.json" `
-  -Mode Complete `
+  -Mode Incremental `
   -workspaceName $synapseWorkspace `
   -dataLakeAccountName $dataLakeAccountName `
   -sqlUser $sqlUser `

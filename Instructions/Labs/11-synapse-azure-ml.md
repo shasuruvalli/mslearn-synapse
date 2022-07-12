@@ -8,7 +8,7 @@ lab:
 
 Azure Machine Learning is a cloud-based platform for creating, deploying, and operating machine learning solutions. When combined with Azure Synapse Analytics, you can ingest and prepare data for machine learning model training, and then use Azure Machine learning to train and deploy a model. You can then use the model to support predictive analytics in Azure Synapse Analytics.
 
-This lab will take approximately **60** minutes to complete.
+This lab will take approximately **90** minutes to complete.
 
 ## Before you start
 
@@ -46,7 +46,7 @@ In this exercise, you'll integrate an Azure Machine Learning workspace and an Az
 
     > **Note**: Be sure to remember this password!
 
-8. Wait for the script to complete - this typically takes around 15 minutes, but in some cases may take longer. While you are waiting, review the [Machine Learning capabilities in Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/machine-learning/what-is-machine-learning) article in the Azure Synapse Analytics documentation.
+8. Wait for the script to complete - this typically takes 5-10 minutes, but in some cases may take longer. While you are waiting, review the [Machine Learning capabilities in Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/machine-learning/what-is-machine-learning) article in the Azure Synapse Analytics documentation.
 
 9. When the script has finished, in the Azure portal, view the **dp000-*xxxxxxx*** resource group that it created. This should include the following resources:
     - **aml*xxxxxxx*** - An Azure Machine Learning workspace.
@@ -56,7 +56,6 @@ In this exercise, you'll integrate an Azure Machine Learning workspace and an Az
     - **datalake*xxxxxxx*** - A storage account for the data lake used in Azure Synapse Analytics
     - **spark*xxxxxxx* (synapse*xxxxxxx*/spark*xxxxxxx*)** - An Apache Spark pool.
     - **synapse*xxxxxxx*** - An Azure Synapse Analytics workspace.
-
 
 > **Tip**: If, after running the setup script you decide not to complete the lab, be sure to delete the **dp000-*xxxxxxx*** resource group that was created in your Azure subscription to avoid unnecessary Azure costs.
 
@@ -103,22 +102,26 @@ Before training a model, a data scientists generally explores the data with whic
 
     ```python
     bike_df = df.select("season", 
-                     "mnth", 
-                     "holiday", 
-                     "weekday", 
-                     "workingday", 
-                     "weathersit", 
-                     "temp", 
-                     "atemp", 
-                     "hum", 
-                     "windspeed", 
-                     "rentals")
+                        "mnth", 
+                        "holiday", 
+                        "weekday", 
+                        "workingday", 
+                        "weathersit", 
+                        "temp", 
+                        "atemp", 
+                        "hum", 
+                        "windspeed", 
+                        "rentals")
     bike_df.write.saveAsTable("bike_data")
     ```
 
 10. Use the **&#9655;** button to the left of the code cell to run it. The code selects a subset of columns from the original dataset, and saves them as a table named **bike_data** in the default Spark database.
 
-11. Add another new code cell, and use it to run the following code to query the table you just created:
+11. Use the **Publish all** button to publish the **Notebook 1** notebook - you will return to it later.
+
+12. In the **Data** pane, view the **Workspace** tab. If no databases are listed, you may need to use the **&#8635;** button at the top right of Synapse Studio to refresh the page. Then expand **Lake database**, the **default** database, and its **Tables** folder to see the **bike_data** table you just created.
+
+13. In the **Notebook 1** notebook, add another new code cell and use it to run the following code to query the **bike_data** table:
 
     ```sql
     %%sql
@@ -126,7 +129,7 @@ Before training a model, a data scientists generally explores the data with whic
     SELECT * FROM bike_data
     ```
 
-12. Close the **Notebook 1** tab, ending the Spark session and discarding the notebook.
+14. Publish the changes to the notebook. Then close the **Notebook 1** tab, and stop the Spark session.
 
 ## Connect Azure Synapse Analytics to Azure Machine Learning
 
@@ -164,11 +167,10 @@ Now you can create a linked service to connect your Azure Machine Learning works
 
 Now that you've connected your Azure Machine Learning workspace to your Azure Synapse Analytics workspace, you're ready to train a machine learning model to predict the number of rentals for a day based on its temporal, seasonal, and meteorological features. To accomplish this, you can use Azure Machine Learning's automated machine learning capability.
 
-1. In Synapse Analytics, on the **Data** page, view the **Workspace** tab. If no databases are listed, you may need to use the **&#8635;** button at the top right of Synapse Studio to refresh the page.
-2. Expand **Lake database** and the **default** database, and then expand the **Tables** folder to see the **bike_data** table you created previously.
-3. Select the **bike_data** table, and in its **...** menu, select **Machine Learning** > **Train a new model**.
-4. In the **Train a new model** pane, select **Regression** (you're going to predict the number of rentals, which is a numeric value; making this a *regression* model.)
-5. Continue to configure a training job with the following details:
+1. In Synapse Studio, on the **Data** page, on the **Workspace** tab, select the **bike_data** table in the **default** lake database.
+2. In the **bike_data** table's **...** menu, select **Machine Learning** > **Train a new model**.
+3. In the **Train a new model** pane, select **Regression** (you're going to predict the number of rentals, which is a numeric value; making this a *regression* model.)
+4. Continue to configure a training job with the following details:
     - **Source data**: bike_data
     - **Azure Machine Learning workspace**: aml*xxxxxxx* (AzureML)
     - **Experiment name**: mslearn-bike-rentals
@@ -178,13 +180,24 @@ Now that you've connected your Azure Machine Learning workspace to your Azure Sy
 
     > **Note**: The automated machine learning job will run on your Spark pool compute. Your Spark pool must use the *Spark 2.4* runtime to support automated machine learning with Azure Machine Learning.
 
-6. Continue to configure the regression model with the following settings:
+5. Continue to configure the regression model with the following settings:
     - **Primary metric**: Spearman correlation
     - **Maximum training job time (hours)**: 0.25
     - **Max concurrent iterations**: 2
     - **ONNX model compatibility**: Enable
-7. Create the run, which will take a few minutes to be submitted and then run on your Spark pool. To view the run 's progress, on the **Monitor** page, select **Apache Spark applications** and look for the **Synapse_spark*xxxxxxx*_...** Spark session.
-
-    The automated machine learning job may take 15 minutes or more to run, so now is a good time for a coffee break!
+6. Select the option to open the run in a notebook and review the PySpark code in the notebook that is generated. This code is implemented in multiple code cells, which:
+    - Import the Azure Machine Learning libraries needed to train a model using automated machine learning.
+    - Establish a connection to the Azure Machine Learning workspace you linked previously.
+    - Create a training dataset from the data in the **bike_data** table.
+    - Configure an automated machine learning job based on the settings you selected previously.
+    - Run the job.
+    - Display an HTML link to the job in Azure Machine Learning Studio.
+    - Wait for the job to complete, and then register the best performing model.
+7. Use the **&#9655; Run all** button to run all of the cells in the notebook, and observe the output as they run.
+8. In the output from cell **\[6]** (`displayHTML(...`), use the link to your experiment in the Azure Machine Learning portal to open Azure Machine Learning Studio in a new browser tab and view the job as it runs (sign in using your Azure credentials if prompted.)
+9. In Azure Machine Learning Studio, on the **Overview** tab for the job, observe its status. After a while, it should change to **Running** as the automated machine learning process iteratively tries multiple machine learning algorithms and data normalization techniques to train and evaluate many models in order to find the best performing one for your data.
+10. View the **Models** tab for the job. Details of each model as it is trained and evaluated will be displayed here. You can use the **&#8635; Refresh** button to update the display.
+11. Wait for the training job to complete. This will take at least 15 minutes, so now might be a good time for a coffee break!
+12. When the job status changes to **Completed**, switch back to Synapse Studio and view the notebook. Then wait for the last cell in the notebook to complete (it may need to retry connections to Azure Machine Learning a few times).
 
 *To be continued...*

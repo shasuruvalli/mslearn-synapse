@@ -46,7 +46,7 @@ In this exercise, you'll integrate an Azure Machine Learning workspace and an Az
 
     > **Note**: Be sure to remember this password!
 
-8. Wait for the script to complete - this typically takes 5-10 minutes, but in some cases may take longer. While you are waiting, review the [Machine Learning capabilities in Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/machine-learning/what-is-machine-learning) article in the Azure Synapse Analytics documentation.
+8. Wait for the script to complete - this typically takes around 10 minutes, but in some cases may take longer. While you are waiting, review the [Machine Learning capabilities in Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/machine-learning/what-is-machine-learning) article in the Azure Synapse Analytics documentation.
 
 9. When the script has finished, in the Azure portal, view the **dp000-*xxxxxxx*** resource group that it created. This should include the following resources:
     - **aml*xxxxxxx*** - An Azure Machine Learning workspace.
@@ -55,6 +55,7 @@ In this exercise, you'll integrate an Azure Machine Learning workspace and an Az
     - **aml*xxxxxxx*storage*nnn*...** - A storage account for Azure Machine Learning.
     - **datalake*xxxxxxx*** - A storage account for the data lake used in Azure Synapse Analytics
     - **spark*xxxxxxx* (synapse*xxxxxxx*/spark*xxxxxxx*)** - An Apache Spark pool.
+    - **sql*xxxxxxx*** - A dedicated SQL pool.
     - **synapse*xxxxxxx*** - An Azure Synapse Analytics workspace.
 
 > **Tip**: If, after running the setup script you decide not to complete the lab, be sure to delete the **dp000-*xxxxxxx*** resource group that was created in your Azure subscription to avoid unnecessary Azure costs.
@@ -201,4 +202,19 @@ Now that you've connected your Azure Machine Learning workspace to your Azure Sy
 12. When the job status changes to **Completed**, switch back to Synapse Studio and view the notebook. Then wait for the last cell in the notebook to complete. Iit may need to retry connections to Azure Machine Learning a few times, but eventually the best performing model should be registered as **rental-prediction-model**.
 13. Switch back to Azure machine Learning Studio, use the **&#9776;** button to expand the pane on the left if necessary, and view the **Models** page to confirm that the model is registered in Azure Machine Learning.
 
-*To be continued...*
+## Use a model for predictive analytics
+
+Now that you have a machine learning model that can predict the number of bike rentals for a given day, you can use it to incorporate predictive analytics into a data warehousing solution.
+
+### View input data for the model
+
+The model you created expects input values containing temporal, seasonal, and meteorological features for one or more days.
+
+1. In Synapse Studio, on the **Manage** page, in the **SQL pools** section, select the **sql*xxxxxxx*** dedicated SQL pool row and then use its **&#9655;** icon to resume it.
+2. Wait for the SQL pool to start. This can take a few minutes. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **Online** when it is ready.
+3. When the SQL pool has started, select the **Data** page; and on the **Workspace** tab, expand **SQL databases** and verify that **sql*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary).
+4. Expand the **sql*xxxxxxx*** database and its **Tables** folder,  and then in the **...** menu for the **weather_forecast** table, point to **New SQL script**, and select **Select TOP 100 rows**.
+5. Review the results of the query, which show weather forecast data for 10 days.
+
+### Use the model to predict rentals
+

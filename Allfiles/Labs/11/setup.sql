@@ -16,7 +16,7 @@ CREATE TABLE weather_forecast (
 	);
 GO
 
-COPY INTO dbo.weather_forecast2
+COPY INTO dbo.weather_forecast
     (season, mnth, holiday, weekday, workingday, weathersit, temp, atemp, hum, windspeed)
 FROM 'https://datalakexxxxxxx.dfs.core.windows.net/files/data/weather-forecast.csv'
 WITH(

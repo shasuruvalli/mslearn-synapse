@@ -68,11 +68,11 @@ Before training a model, a data scientists generally explores the data with whic
 2. In the **Overview** page for your Synapse workspace, in the **Open Synapse Studio** card, select **Open** to open Synapse Studio in a new browser tab; signing in if prompted.
 3. On the left side of Synapse Studio, use the **&rsaquo;&rsaquo;** icon to expand the menu - this reveals the different pages within Synapse Studio that you'll use to manage resources and perform data analytics tasks.
 4. On the **Data** page, view the **Linked** tab. Then expand **Azure Data Lake Storage Gen2** and your **synapse*xxxxxxx* (Primary - datalake*xxxxxxx*)** data lake storage account, and select its **files** container.
-5. In the **files** tab, open the **data** folder. Then select the **bike-rentals.csv** file it contains and in the **New notebook** menu, select **Load to DataFrame**. This creates a new **Notebook 1** tab for a notebook in which a single cell contains code similar to the following example:
+5. In the **files** tab, open the **data** folder. Then select the **bike-rentals-training.csv** file it contains and in the **New notebook** menu, select **Load to DataFrame**. This creates a new **Notebook 1** tab for a notebook in which a single cell contains code similar to the following example:
 
     ```python
     %%pyspark
-    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/data/bike-rentals.csv', format='csv'
+    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/data/bike-rentals-training.csv', format='csv'
     ## If header exists uncomment line below
     ##, header=True
     )
@@ -83,7 +83,7 @@ Before training a model, a data scientists generally explores the data with whic
 
     ```python
     %%pyspark
-    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/data/bike-rentals.csv', format='csv'
+    df = spark.read.load('abfss://files@datalakexxxxxxx.dfs.core.windows.net/data/bike-rentals-training.csv', format='csv'
     ## If header exists uncomment line below
     , header=True
     , inferSchema=True

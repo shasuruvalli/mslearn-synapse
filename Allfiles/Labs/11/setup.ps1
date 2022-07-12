@@ -149,6 +149,7 @@ az ml workspace create --name $amlWorkspace --resource-group $resourceGroupName 
 $synapseWorkspace = "synapse$suffix"
 $dataLakeAccountName = "datalake$suffix"
 $sparkPool = "spark$suffix"
+$sqlDatabaseName = "sql$suffix"
 
 write-host "Creating $synapseWorkspace Synapse Analytics workspace in $resourceGroupName resource group..."
 New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
@@ -157,6 +158,7 @@ New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
   -workspaceName $synapseWorkspace `
   -dataLakeAccountName $dataLakeAccountName `
   -sparkPoolName $sparkPool `
+  -sqlDatabaseName $sqlDatabaseName `
   -sqlUser $sqlUser `
   -sqlPassword $sqlPassword `
   -uniqueSuffix $suffix `
@@ -172,15 +174,27 @@ New-AzRoleAssignment -Objectid $id -RoleDefinitionName "Storage Blob Data Owner"
 New-AzRoleAssignment -SignInName $userName -RoleDefinitionName "Storage Blob Data Owner" -Scope "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.Storage/storageAccounts/$dataLakeAccountName" -ErrorAction SilentlyContinue;
 
 # Upload files
-write-host "Loading data..."
+write-host "Uploading files..."
 $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $dataLakeAccountName
 $storageContext = $storageAccount.Context
-Get-ChildItem "./data/*.csv" -File | Foreach-Object {
+Get-ChildItem "./files/*.csv" -File | Foreach-Object {
     write-host ""
     $file = $_.Name
     Write-Host $file
     $blobPath = "data/$file"
     Set-AzStorageBlobContent -File $_.FullName -Container "files" -Blob $blobPath -Context $storageContext
 }
+
+# Create database
+write-host "Creating the $sqlDatabaseName database..."
+$setupSQL = Get-Content -Path "setup.sql" -Raw
+$setupSQL = $setupSQL.Replace("datalakexxxxxxx", $dataLakeAccountName)
+Set-Content -Path "setup$suffix.sql" -Value $setupSQL
+sqlcmd -S "$synapseWorkspace.sql.azuresynapse.net" -U $sqlUser -P $sqlPassword -d $sqlDatabaseName -I -i setup$suffix.sql
+
+# Pause SQL Pool
+write-host "Pausing the $sqlDatabaseName SQL Pool..."
+Suspend-AzSynapseSqlPool -WorkspaceName $synapseWorkspace -Name $sqlDatabaseName -AsJob
+
 
 write-host "Script completed at $(Get-Date)"

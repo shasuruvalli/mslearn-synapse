@@ -193,11 +193,12 @@ Now that you've connected your Azure Machine Learning workspace to your Azure Sy
     - Run the job.
     - Display an HTML link to the job in Azure Machine Learning Studio.
     - Wait for the job to complete, and then register the best performing model.
-7. Use the **&#9655; Run all** button to run all of the cells in the notebook, and observe the output as they run.
+7. Use the **&#9655; Run all** button to run all of the cells in the notebook, and observe the output as they run (once again it may take some time for the Spark session to start when running the first cell).
 8. In the output from cell **\[6]** (`displayHTML(...`), use the link to your experiment in the Azure Machine Learning portal to open Azure Machine Learning Studio in a new browser tab and view the job as it runs (sign in using your Azure credentials if prompted.)
-9. In Azure Machine Learning Studio, on the **Overview** tab for the job, observe its status. After a while, it should change to **Running** as the automated machine learning process iteratively tries multiple machine learning algorithms and data normalization techniques to train and evaluate many models in order to find the best performing one for your data.
-10. View the **Models** tab for the job. Details of each model as it is trained and evaluated will be displayed here. You can use the **&#8635; Refresh** button to update the display.
+9. In Azure Machine Learning Studio, on the **Overview** tab for the job, observe its status. A status of **Running** indicates that the job has started. Initially the job sets up the run, and then the automated machine learning process starts iteratively using multiple machine learning algorithms and data normalization techniques to train and evaluate many models in order to find the best performing one for your data.
+10. When model training begins, view the **Models** tab for the job. Details of each model as it is trained and evaluated will be displayed here. You can use the **&#8635; Refresh** button to update the display.
 11. Wait for the training job to complete. This will take at least 15 minutes, so now might be a good time for a coffee break!
-12. When the job status changes to **Completed**, switch back to Synapse Studio and view the notebook. Then wait for the last cell in the notebook to complete (it may need to retry connections to Azure Machine Learning a few times).
+12. When the job status changes to **Completed**, switch back to Synapse Studio and view the notebook. Then wait for the last cell in the notebook to complete. Iit may need to retry connections to Azure Machine Learning a few times, but eventually the best performing model should be registered as **rental-prediction-model**.
+13. Switch back to Azure machine Learning Studio, use the **&#9776;** button to expand the pane on the left if necessary, and view the **Models** page to confirm that the model is registered in Azure Machine Learning.
 
 *To be continued...*

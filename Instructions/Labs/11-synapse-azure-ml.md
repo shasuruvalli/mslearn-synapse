@@ -216,5 +216,8 @@ The model you created expects input values containing temporal, seasonal, and me
 4. Expand the **sql*xxxxxxx*** database and its **Tables** folder,  and then in the **...** menu for the **weather_forecast** table, point to **New SQL script**, and select **Select TOP 100 rows**.
 5. Review the results of the query, which show weather forecast data for 10 days.
 
-### Use the model to predict rentals
+### Use the model to generate predictions
 
+Azure Synapse Analytcs includes support for a PREDICT function that you can use in Transact-SQL to generate a prediction from a model that is stored in a dedicated SQL database.
+
+*To be continued...*

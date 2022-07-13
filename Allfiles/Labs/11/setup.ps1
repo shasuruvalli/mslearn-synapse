@@ -177,8 +177,9 @@ write-host "Importing notebooks..."
 Get-ChildItem "./notebooks/*.ipynb" -File | Foreach-Object {
     write-host ""
     $file = $_.FullName
-    Write-Host "$file"
-    az synapse notebook create --workspace-name $synapseWorkspace --name $_.Name --file "@$file"
+    $name = $_.Name
+    Write-Host "Importing $name ..."
+    az synapse notebook import --workspace-name $synapseWorkspace --name "$name" --file "@$file" --only-show-errors >/dev/null
 }
 
 write-host "Script completed at $(Get-Date)"

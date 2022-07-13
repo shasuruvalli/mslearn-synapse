@@ -55,7 +55,7 @@ In this exercise, you'll integrate an Azure Machine Learning workspace and an Az
     - **aml*xxxxxxx*storage*nnn*...** - A storage account for Azure Machine Learning.
     - **datalake*xxxxxxx*** - A storage account for the data lake used in Azure Synapse Analytics
     - **spark*xxxxxxx* (synapse*xxxxxxx*/spark*xxxxxxx*)** - An Apache Spark pool.
-    - **sql*xxxxxxx*** - A dedicated SQL pool.
+    - **sql*xxxxxxx* (synapse*xxxxxxx*/sql*xxxxxxx*)** - A dedicated SQL pool.
     - **synapse*xxxxxxx*** - An Azure Synapse Analytics workspace.
 
 > **Tip**: If, after running the setup script you decide not to complete the lab, be sure to delete the **dp000-*xxxxxxx*** resource group that was created in your Azure subscription to avoid unnecessary Azure costs.
@@ -218,6 +218,31 @@ The model you created expects input values containing temporal, seasonal, and me
 
 ### Use the model to generate predictions
 
-Azure Synapse Analytcs includes support for a PREDICT function that you can use in Transact-SQL to generate a prediction from a model that is stored in a dedicated SQL database.
+Azure Synapse Analytics includes support for a PREDICT function that you can use in Transact-SQL to generate a prediction from a model that is stored in a dedicated SQL database.
 
-*To be continued...*
+1. In Synapse Studio, on the **Data** page, in the **sql*xxxxxxx*** database, select the **weather_forecast** table; and in its **...** menu, select **Machine learning** > **Predict with a model**.
+2. In the **predict with a model** pane, ensure your **aml*xxxxxxx* (AzureML)** workspace is selected and select the **rental-prediction-model** you registered previously.
+3. Continue, and review the default mappings; which include the input mappings of source columns in the table to features in the model, and an output mapping that returns the predicted rentals value to a variable named **variable_out1**.
+4. Continue, and define the following objects to be created in the database:
+    - **Store objects in the database**:
+        - **Script type**: Stored procedure
+        - **Stored procedure name**: dbo.predict_rentals
+    - **Load model into a database table**:
+        - **Database table**: Create new
+        - **New table**: dbo.rental_prediction_model
+5. Deploy the model and open the script that gets generated.
+6. Review the Transact-SQl script that gets created. It includes a CREATE PROCEDURE statement to create a stored procedure that uses the PREDICT function to generate predictions from your model based on the data in the **weather_forecast** table, and an EXEC statement to call the stored procedure.
+7. Use the the **&#9655; Run** button to run the script and review the results. The **variable_out1** column contains the predicted number of rentals for each day.
+8. When you're done, on the **Manage** page, pause the **sql*xxxxxxx*** dedicated SQL pool.
+
+## Delete Azure resources
+
+If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
+
+1. Close the Synapse Studio browser tab and return to the Azure portal.
+2. On the Azure portal, on the **Home** page, select **Resource groups**.
+3. Select the **dp000-*xxxxxxx*** resource group.
+4. At the top of the **Overview** page for your resource group, select **Delete resource group**.
+5. Enter the **dp000-*xxxxxxx*** resource group name to confirm you want to delete it, and select **Delete**.
+
+    After a few minutes, your Azure Synapse workspace resource group and the managed workspace resource group associated with it will be deleted.

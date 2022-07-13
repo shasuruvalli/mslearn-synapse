@@ -1,7 +1,7 @@
 ---
 lab:
     title: 'Use Azure Machine Learning with Azure Synapse Analytics'
-    module: 'Predictive Analytics with Microsoft Purview'
+    module: 'Predictive Analytics with Azure Synapse Analytics'
 ---
 
 # Use Azure Machine Learning with Azure Synapse Analytics

@@ -178,7 +178,7 @@ Get-ChildItem "./notebooks/*.ipynb" -File | Foreach-Object {
     write-host ""
     $file = $_.FullName
     Write-Host "$file"
-    Set-AzSynapseNotebook -WorkspaceName $synapseWorkspace -DefinitionFile $file
+    az synapse notebook create --workspace-name $synapseWorkspace --name $_.Name --file "@$file"
 }
 
 write-host "Script completed at $(Get-Date)"

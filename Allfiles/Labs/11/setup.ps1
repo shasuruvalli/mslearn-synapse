@@ -172,8 +172,15 @@ Get-ChildItem "./data/*.csv" -File | Foreach-Object {
     Set-AzStorageBlobContent -File $_.FullName -Container "files" -Blob $blobPath -Context $storageContext
 }
 
+
 # Import notebooks
 write-host "Importing notebooks..."
+
+# prepare classification notebook
+$classificationJSON = Get-Content -Path "classification.ipynb" -Raw
+$classificationJSON = $classificationJSON.Replace("datalakexXXXXXXX", $dataLakeAccountName)
+Set-Content -Path "/notebooks/classification.ipynb" -Value $classificationJSON
+
 Get-ChildItem "./notebooks/*.ipynb" -File | Foreach-Object {
     write-host ""
     $file = $_.FullName

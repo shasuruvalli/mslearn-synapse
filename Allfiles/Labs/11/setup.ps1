@@ -175,12 +175,6 @@ Get-ChildItem "./data/*.csv" -File | Foreach-Object {
 
 # Import notebooks
 write-host "Importing notebooks..."
-
-# prepare classification notebook
-$classificationJSON = Get-Content -Path "./Classification.ipynb" -Raw
-$classificationJSON = $classificationJSON.Replace("datalakexXXXXXXX", $dataLakeAccountName)
-Set-Content -Path "./notebooks/Classification.ipynb" -Value $classificationJSON
-
 Get-ChildItem "./notebooks/*.ipynb" -File | Foreach-Object {
     write-host ""
     $file = $_.FullName

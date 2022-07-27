@@ -20,7 +20,7 @@ An Azure Synapse Analytics *workspace* provides a central point for managing dat
 
 In this exercise, you'll use a combination of a PowerShell script and an ARM template to provision Azure Synapse Analytics.
 
-1. Sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
+1. In a web browser, sign into the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
 2. Use the **[\>_]** button to the right of the search bar at the top of the page to create a new Cloud Shell in the Azure portal, selecting a ***PowerShell*** environment and creating storage if prompted. The cloud shell provides a command line interface in a pane at the bottom of the Azure portal, as shown here:
 
     ![Azure portal with a cloud shell pane](./images/cloud-shell.png)
@@ -348,12 +348,12 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 ### Create a Data Explorer database
 
 1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool row and then use its **&#9655;** icon to resume it.
-2. While waiting for the pool to start, download **devices.csv** from [https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv), saving it in any folder on your local computer.
+2. While waiting for the pool to start, download [**devices.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv) from `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv`, saving it in any folder on your local computer.
 3. Continue waiting for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
 4. When the Data Explorer pool has started, select the **Data** page; and on the **Workspace** tab, expand **Data Explorer databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
 5. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **iot-data**.
 6. In Synapse Studio, wait for the database to be created (a notification will be displayed), and then in the **...** menu for the new **iot-data** database, select **Open in Azure Data Explorer** (reauthenticating if prompted).
-7. In the new browser tab containing Azure Data Explorer, on the **Data** tab, select **Ingest new data**.
+7. In the new browser tab containing Azure Data Explorer, on the **Data** tab, select **Ingest data**.
 8. In the **Destination** page, select the following settings:
     - **Cluster**: *The **adx*xxxxxxx*** Data Explorer pool in your Azure Synapse workspace*
     - **Database**: iot-data
@@ -433,11 +433,11 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 
 11. Close the query pane, and then view the **Develop** page to verify that the KQL script has been saved.
 
- 12. On the **Manage** page, select the **adx*xxxxxxx*** Data Explorer pool row and use its &#10074;&#10074; icon to pause it.
+12. On the **Manage** page, select the **adx*xxxxxxx*** Data Explorer pool row and use its &#10074;&#10074; icon to pause it.
 
 ## Delete Azure resources
 
-If you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
+Now that you've finished exploring Azure Synapse Analytics, you should delete the resources you've created to avoid unnecessary Azure costs.
 
 1. Close the Synapse Studio browser tab and return to the Azure portal.
 2. On the Azure portal, on the **Home** page, select **Resource groups**.

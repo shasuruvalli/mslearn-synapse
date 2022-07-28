@@ -50,7 +50,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
 
     > **Note**: Be sure to remember this password!
 
-8. Wait for the script to complete - this typically takes around 10 minutes, but in some cases may take longer. While you are waiting, review the [Serverless SQL pool in Azure Synapse Analytics](https://docs.microsoft.com/azure/synapse-analytics/sql/on-demand-workspace-overview) article in the Azure Synapse Analytics documentation.
+8. Wait for the script to complete - this typically takes around 10 minutes, but in some cases may take longer. While you are waiting, review the [CETAS with Synapse SQL](https://docs.microsoft.com/azure/synapse-analytics/sql/develop-tables-cetas) article in the Azure Synapse Analytics documentation.
 
 ## Query data in files
 
@@ -72,7 +72,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
 
 1. Select the **csv** folder, and then in the **New SQL script** list on the toolbar, select **Select TOP 100 rows**.
 2. In the **File type** list, select **Text format**, and then apply the settings to open a new SQL script that queries the data in the folder.
-3. In the **Properties** pane for **SQL Script 1** that is created, change the name to **Query Sales CSV filed**, and change the result settings to show **All rows**. Then in the toolbar, select **Publish** to save the script and use the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) on the right end of the toolbar to hide the **Properties** pane.
+3. In the **Properties** pane for **SQL Script 1** that is created, change the name to **Query Sales CSV files**, and change the result settings to show **All rows**. Then in the toolbar, select **Publish** to save the script and use the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) on the right end of the toolbar to hide the **Properties** pane.
 4. Review the SQL code that has been generated, which should be similar to this:
 
     ```SQL
@@ -107,7 +107,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
 
     | SalesOrderNumber | SalesOrderLineNumber | OrderDate | CustomerName | EmailAddress | Item | Quantity | UnitPrice | TaxAmount |
     | -- | -- | -- | -- | -- | -- | -- | -- | -- |
-    | SO45347 | 1 | 2020-01-01 | Clarence Raji | clarence35@adventure-works.com |Road-650 Black, 52 | 1 | 699.10 | 55.93 |
+    | SO43701 | 1 | 2019-07-01 | Christy Zhu | christy12@adventure-works.com |Mountain-100 Silver, 44 | 1 | 3399.99 | 271.9992 |
     | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
 7. Publish the changes to your script, and then close the script pane.
@@ -124,33 +124,152 @@ By defining an external data source in a database, you can use it to reference t
 2. In the new script pane, add the following code (replacing *datalakexxxxxxx* with the name of your data lake storage account) to create a new database and add an external data source to it.
 
     ```sql
+    -- Database for sales data
     CREATE DATABASE Sales
       COLLATE Latin1_General_100_BIN2_UTF8;
     GO;
-
+    
     Use Sales;
     GO;
-
+    
+    -- External data is in the Files container in the data lake
     CREATE EXTERNAL DATA SOURCE sales_data WITH (
         LOCATION = 'https://datalakexxxxxxx.dfs.core.windows.net/files/'
     );
     GO;
-
+    
+    -- Format for table files
     CREATE EXTERNAL FILE FORMAT ParquetFormat
         WITH (
-            FORMAT_TYPE = PARQUET
-        );
+                FORMAT_TYPE = PARQUET,
+                DATA_COMPRESSION = 'org.apache.hadoop.io.compress.SnappyCodec'
+            );
     GO;
     ```
 
 3. Modify the script properties to change its name to **Create Sales DB**, and publish it.
 4. Ensure that the script is connected to the **Built-in** SQL pool and the **master** database, and then run it.
-5. Switch back to the **Data** page and use the **&#8635;** button at the top right of Synapse Studio to refresh the page. Then view the **Workspace** tab in the **Data** pane, where a **SQL database** list is no displayed. Expand this list to verify that the **Sales** database has been created.
+5. Switch back to the **Data** page and use the **&#8635;** button at the top right of Synapse Studio to refresh the page. Then view the **Workspace** tab in the **Data** pane, where a **SQL database** list is now displayed. Expand this list to verify that the **Sales** database has been created.
 6. Expand the **Sales** database, its **External Resources** folder, and the **External data sources** folder under that to see the **sales_data** external data source you created.
 
 ### Create an External table
 
-*in progress...*
+1. In Synapse Studio, on the **Develop** page, in the **+** menu, select **SQL script**.
+2. In the new script pane, add the following code to retrieve and aggregate data from the CSV sales files by using the external data source - noting that the **BULK** path is relative to the folder location on which the data source is defined:
+
+    ```sql
+    USE Sales;
+    GO;
+    
+    SELECT Item AS Product,
+           SUM(Quantity) AS ItemsSold,
+           ROUND(SUM(UnitPrice) - SUM(TaxAmount), 2) AS NetRevenue
+    FROM
+        OPENROWSET(
+            BULK 'sales/csv/*.csv',
+            DATA_SOURCE = 'sales_data',
+            FORMAT = 'CSV',
+            PARSER_VERSION = '2.0',
+            HEADER_ROW = TRUE
+        ) AS orders
+    GROUP BY Item;
+    ```
+
+3. Run the script. The results should look similar to this:
+
+    | Product | ItemsSold | NetRevenue |
+    | -- | -- | -- |
+    | AWC Logo Cap | 1063 | 8791.86 |
+    | ... | ... | ... |
+
+4. Modify the SQL code to save the results of query in an external table, like this:
+
+    ```sql
+    CREATE EXTERNAL TABLE ProductSalesTotals
+        WITH (
+            LOCATION = 'sales/productsales/',
+            DATA_SOURCE = sales_data,
+            FILE_FORMAT = ParquetFormat
+        )
+    AS
+    SELECT Item AS Product,
+        SUM(Quantity) AS ItemsSold,
+        ROUND(SUM(UnitPrice) - SUM(TaxAmount), 2) AS NetRevenue
+    FROM
+        OPENROWSET(
+            BULK 'sales/csv/*.csv',
+            DATA_SOURCE = 'sales_data',
+            FORMAT = 'CSV',
+            PARSER_VERSION = '2.0',
+            HEADER_ROW = TRUE
+        ) AS orders
+    GROUP BY Item;
+    ```
+
+5. Run the script. This time there's no output, but the code should have created an external table based on the results of the query.
+6. On the **data** page, in the **Workspace** tab, view the contents of the **External tables** folder for the **Sales** SQL database to verify that a new table named **ProductSalesTotals** has been created.
+7. In the **...** menu for the **ProductSalesTotals** table, select **New SQL script** > **Select TOP 100 rows**. Then run the resulting script and verify that it returns the aggregated product sales data.
+8. On the **files** tab containing the file system for your data lake, view the contents of the **sales** folder (refreshing the view if necessary) and verify that a new **productsales** folder has been created.
+9. In the **productsales** folder, observe that a file with a name similar to ABC123DE----.parquet has been created. This file contains the aggregated product sales data. To prove this, you can select the file and use the **New SQL script** > **Select TOP 100 rows** menu to query it directly.
+
+## Encapsulate data transformation in a stored procedure
+
+If you will need to transform data frequently, you can use a stored procedure to encapsulate a CETAS statement.
+
+1. In Synapse Studio, on the **Develop** page, in the **+** menu, select **SQL script**.
+2. In the new script pane, add the following code to create a stored procedure in the **Sales** database that aggregates sales by year and saves the results in an external table:
+
+    ```sql
+    USE Sales;
+    GO;
+    
+    CREATE PROCEDURE sp_GetYearlySales
+    AS
+    BEGIN
+        IF EXISTS (
+                SELECT * FROM sys.external_tables
+                WHERE name = 'YearlySalesTotals'
+            )
+            DROP EXTERNAL TABLE YearlySalesTotals
+        
+        CREATE EXTERNAL TABLE YearlySalesTotals
+        WITH (
+                LOCATION = 'sales/yearlysales/',
+                DATA_SOURCE = sales_data,
+                FILE_FORMAT = ParquetFormat
+            )
+        AS
+        SELECT YEAR(OrderDate) AS CalendarYear,
+               SUM(Quantity) AS ItemsSold,
+               ROUND(SUM(UnitPrice) - SUM(TaxAmount), 2) AS NetRevenue
+        FROM
+            OPENROWSET(
+                BULK 'sales/csv/*.csv',
+                DATA_SOURCE = 'sales_data',
+                FORMAT = 'CSV',
+                PARSER_VERSION = '2.0',
+                HEADER_ROW = TRUE
+            ) AS orders
+        GROUP BY YEAR(OrderDate)
+    END
+    ```
+
+3. Run the script to create the stored procedure.
+4. Under the code you just ran, add the following code to call the stored procedure:
+
+    ```sql
+    EXEC sp_GetYearlySales;
+    ```
+
+5. Select only the `EXEC sp_GetYearlySales;` statement you just added, and use the **&#9655; Run** button to run it.
+6. On the **files** tab containing the file system for your data lake, view the contents of the **sales** folder (refreshing the view if necessary) and verify that a new **yearlysales** folder has been created.
+7. In the **yearlysales** folder, observe that a parquet file containing the aggregated yearly sales data has been created.
+8. Switch back to the SQL script and re-run the `EXEC sp_GetYearlySales;` statement, and observe that an error occurs.
+
+    Even though the script drops the external table, the folder containing the data is not deleted. To re-run the stored procedure (for example, as part of a scheduled data transformation pipeline), you must delete the old data.
+
+9. Switch back to the **files** tab, and view the **sales** folder. Then select the **yearlysales** folder and delete it.
+10. Switch back to the SQL script and re-run the `EXEC sp_GetYearlySales;` statement. This time, the operation succeeds and a new data file is generated.
 
 ## Delete Azure resources
 

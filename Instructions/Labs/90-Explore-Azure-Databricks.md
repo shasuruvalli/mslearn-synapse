@@ -49,7 +49,7 @@ In this exercise, you'll use a script to provision a new Azure Databricks worksp
 
 ## Create a cluster
 
-Azure Databricks is a distributed processing platform that uses *clusters* to process data in parallel on multiple nodes. Each cluster consists of a driver node to coordinate the work, and worker nodes to perform processing tasks.
+Azure Databricks is a distributed processing platform that uses Apache Spark *clusters* to process data in parallel on multiple nodes. Each cluster consists of a driver node to coordinate the work, and worker nodes to perform processing tasks.
 
 > **Note**: In this exercise, you'll create a *single-node* cluster to minimize the compute resources used in the lab environment (in which resources may be constrained). In a production environment, you'd typically create a cluster with multiple worker nodes.
 
@@ -65,7 +65,7 @@ Azure Databricks is a distributed processing platform that uses *clusters* to pr
     - **Cluster name**: cluster
     - **Cluster mode**: Single Node
     - **Databricks runtime version**: 10.4 LTS (Scala 2.12, Spark 3.2.1)
-    - **Autopilot options**: Terminate after **030** minutes of inactivity
+    - **Autopilot options**: Terminate after **30** minutes of inactivity
     - **Node type**: Standard_DS3_v2
 
 7. Wait for the cluster to be created. It may take a minute or two.
@@ -84,7 +84,7 @@ As in many Spark environments, Databricks supports the use of notebooks to combi
 5. In the **Explore products** notebook, in the empty code cell, paste the code you copied; which should look similar to this:
 
     ```python
-    df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/user@outlook.com/products.csv")
+    df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/user@outlook.com/products_1_.csv")
     ```
 
 6. Use the **&#9656; Run Cell** menu option at the top-right of the cell to run it, starting and attaching the cluster if prompted.

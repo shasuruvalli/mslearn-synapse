@@ -177,7 +177,7 @@ while ($stop -ne 1){
     }
     catch {
       $stop = 0
-      Remove-AzCosmosDBAccount -ResourceGroupName $resourceGroupName -Name $cosmosDB -Location $Region -AsJob | Out-Null
+      Remove-AzCosmosDBAccount -ResourceGroupName $resourceGroupName -Name $cosmosDB -AsJob | Out-Null
       $tried_cosmos.Add($Region)
       $locations = $locations | Where-Object {$_.Location -notin $tried_cosmos}
       if ($locations.length -gt 0)

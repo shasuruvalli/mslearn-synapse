@@ -348,52 +348,61 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 ### Create a Data Explorer database
 
 1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool row and then use its **&#9655;** icon to resume it.
-2. While waiting for the pool to start, download [**devices.csv**](https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv) from `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/01/iot/devices.csv`, saving it in any folder on your local computer.
-3. Continue waiting for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
-4. When the Data Explorer pool has started, select the **Data** page; and on the **Workspace** tab, expand **Data Explorer databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
-5. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **iot-data**.
-6. In Synapse Studio, wait for the database to be created (a notification will be displayed), and then in the **...** menu for the new **iot-data** database, select **Open in Azure Data Explorer** (reauthenticating if prompted).
+2. While waiting for the pool to start, on the **Data** page, on the **Linked** tab, browse to the **files** file system in your **synapse*xxxxxxx*** Azure Data Lake Storage Gen2 resource and view the contents of the **sales_data** folder; which should contain a file named **sales.csv**. You will ingest the data in this file into a Data Explorer database for analysis.
+3. Return to the **Manage** page and view the **Data Explorer pools** tab, and  continue waiting for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
+4. When the Data Explorer pool has started, return to the **Data** page; and on the **Workspace** tab, expand **Data Explorer Databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
+5. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **sales-data**.
+6. In Synapse Studio, wait for the database to be created (a notification will be displayed), and then in the **...** menu for the new **sales-data** database, select **Open in Azure Data Explorer** (reauthenticating if prompted).
 7. In the new browser tab containing Azure Data Explorer, on the **Data** tab, select **Ingest data**.
 8. In the **Destination** page, select the following settings:
-    - **Cluster**: *The **adx*xxxxxxx*** Data Explorer pool in your Azure Synapse workspace*
-    - **Database**: iot-data
-    - **Table**: Create a new table named **devices**
+    - **Cluster**: *The **adxxxxxxxx** Data Explorer pool in your Azure Synapse workspace*
+    - **Database**: sales-data
+    - **Table**: Create a new table named **sales**
 9. Select **Next: Source** and on the **Source** page, select the following options:
-    - **Source type**: File
-    - **Files**: Upload the **devices.csv** file from your local computer.
+    - **Source type**: From ADLS Gen2 container
+    - **Ingestion type**: One-time + continuous
+    - **Select source**: Select container
+    - **Storage subscription**: *Select your Azure subscription*
+    - **Storage account**: *Select your **datalakexxxxxxx** storage account*
+    - **Container**: files
+    - **Sample Size**: 1-5,000
+    - **File Filters**: *Expand*
+        - **Folder path**: sales_data/
+        - **File extension**: .csv
+    - **Schema defining file**: sales_data/sales.csv
+
 10. Select **Next: Schema** and on the **Schema** page, ensure the following settings are correct:
     - **Compression type**: Uncompressed
     - **Data format**: CSV
     - **Ignore the first record**:  selected
-    - **Mapping**: devices_mapping
-11. Ensure the column data types have been correctly identified as *Time (datetime)*, *Device (string)*, and *Value (long)*). Then select **Next: Start Ingestion**.
+    - **Mapping**: sales_mapping
+11. Review the columns and the data types that have been identified for them. Then select **Next: Start Ingestion**.
 12. When ingestion is complete, select **Close**.
-13. In Azure Data Explorer, on the **Query** tab, ensure that the **iot-data** database is selected and then in the query pane, enter the following query.
+13. In Azure Data Explorer, on the **Query** tab, ensure that the **sales-data** database is selected and then in the query pane, enter the following query.
 
     ```kusto
-    devices
+    sales
     ```
 
 14. On the toolbar, use the **&#9655; Run** button to run the query, and review the results, which should look similar to this:
 
-    | Time | Device | Value |
-    | --- | --- | --- |
-    | 2022-01-01T00:00:00Z | Dev1 | 7 |
-    | 2022-01-01T00:00:01Z | Dev2 | 4 |
-    | ... | ... | ... |
+    | SalesOrderNumber | SalesOrderLineItem | OrderDate | CustomerName | EmailAddress | Item | Quantity | UnitPrice | Tax Amount |
+    | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+    | SO43710 | 1 | 2019-07-01 00:00:00.000 | Christy Zhu | christy12@adventure-works.com | Mountain-100 Silver, 44 | 1 | 3,399.99 | 271.9992 |
+    | ... | ... | ... | ... | ... | ... | ... | ... | ... |
 
-    If your results match this, you have successfully created the **devices** table from the data in the file.
+    If your results match this, you have successfully created the **sales** table from the data in the file.
 
 > **Note**: In this example, you imported a very small amount of batch data from a file, which is fine for the purposes of this exercise. In reality, you can use Data Explorer to analyze much larger volumes of data; including realtime data from a streaming source such as Azure Event Hubs.
 
 ### Use Kusto query language to query the table in Synapse Studio
 
 1. Close the Azure Data Explorer browser tab and return to the tab containing Synapse Studio.
-2. On the **Data** page, expand the **iot-data** database and its **Tables** folder. Then in the **...** menu for the **devices** table, select **New KQL script** > **Take 1000 rows**.
+2. On the **Data** page, expand the **sales-data** database and its **Tables** folder. Then in the **...** menu for the **sales** table, select **New KQL script** > **Take 1000 rows**.
 3. Review the generated query and its results. The query should contain the following code:
 
     ```kusto
-    devices
+    sales
     | take 1000
     ```
 
@@ -402,34 +411,34 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 4. Modify the query as follows:
 
     ```kusto
-    devices
-    | where Device == 'Dev1'
+    sales
+    | where Item == 'Road-250 Black, 48'
     ```
 
-5. Use the **&#9655; Run** button to run the query. Then review the results, which should contain only the rows for the *Dev1* device.
+5. Use the **&#9655; Run** button to run the query. Then review the results, which should contain only the rows for sales orders for the *Road-250 Black, 48* product.
 
 6. Modify the query as follows:
 
     ```kusto
-    devices
-    | where Device == 'Dev1'
-    | where Time > datetime(2022-01-07)
+    sales
+    | where Item == 'Road-250 Black, 48'
+    | where datetime_part('year', OrderDate) > 2020
     ```
 
-7. Run the query and review the results, which should contain only the rows for the *Dev1* device later than January 7th 2022.
+7. Run the query and review the results, which should contain only sales orders for *Road-250 Black, 48* made after 2020.
 
 8. Modify the query as follows:
 
     ```kusto
-    devices
-    | where Time between (datetime(2022-01-01 00:00:00) .. datetime(2022-07-01 23:59:59))
-    | summarize AvgVal = avg(Value) by Device
-    | sort by Device asc
+    sales
+    | where OrderDate between (datetime(2020-01-01 00:00:00) .. datetime(2020-12-31 23:59:59))
+    | summarize TotalNetRevenue = sum(UnitPrice) by Item
+    | sort by Item asc
     ```
 
-9. Run the query and review the results, which should contain the average device value recorded between January 1st and January 7th 2022 in ascending order of device name.
+9. Run the query and review the results, which should contain the total net revenue for each product between January 1st and December 31st 2020 in ascending order of product name.
 
-10. If it is not already visible, show the **Properties** page by selecting the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) on the right end of the toolbar. Then in the **Properties** pane, change the query name to **Explore device data** and use the **Publish** button on the toolbar to save it.
+10. If it is not already visible, show the **Properties** page by selecting the **Properties** button (which looks similar to **&#128463;<sub>*</sub>**) on the right end of the toolbar. Then in the **Properties** pane, change the query name to **Explore sales data** and use the **Publish** button on the toolbar to save it.
 
 11. Close the query pane, and then view the **Develop** page to verify that the KQL script has been saved.
 

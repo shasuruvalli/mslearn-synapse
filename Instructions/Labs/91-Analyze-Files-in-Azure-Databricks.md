@@ -43,7 +43,7 @@ In this exercise, you'll use a script to provision a new Azure Databricks worksp
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
 
-7. Wait for the script to complete - this typically takes around 5 minutes, but in some cases may take longer. While you are waiting, review the [What is Azure Databricks?](https://docs.microsoft.com/azure/databricks/scenarios/what-is-azure-databricks) article in the Azure Databricks documentation.
+7. Wait for the script to complete - this typically takes around 5 minutes, but in some cases may take longer. While you are waiting, review the [What is Databricks Data Science & Engineering?](https://docs.microsoft.com/azure/databricks/scenarios/what-is-azure-databricks-ws) article in the Azure Databricks documentation.
 
 ## Create a cluster
 
@@ -52,7 +52,7 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
 > **Note**: In this exercise, you'll create a *single-node* cluster to minimize the compute resources used in the lab environment (in which resources may be constrained). In a production environment, you'd typically create a cluster with multiple worker nodes.
 
 1. In the Azure portal, browse to the **dp000-*xxxxxxx*** resource group that was created by the script you ran.
-2. Select the **databricksxxxxxxx*** Azure Databricks Service resource.
+2. Select the **databricks*xxxxxxx*** Azure Databricks Service resource.
 3. In the **Overview** page for **databricks*xxxxxxx***, use the **Launch Workspace** button to open your Azure Databricks workspace in a new browser tab; signing in if prompted.
 4. If a **What's your current data project?** message is displayed, select **Finish** to close it. Then view the Azure Databricks workspace portal and note that the bar on the left side contains icons for the various tasks you can perform. The bar expands to show the names of the task categories.
 5. Select the **(+) Create** task, and then select **Cluster**.
@@ -73,7 +73,10 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
 
 As in many Spark environments, Databricks supports the use of notebooks to combine notes and interactive code cells that you can use to explore data.
 
-*To be continued...*
+1. Expand the task bar on the left and select the **Workspace** tab. Then select the **Users** folder and in the **&#9662;** menu for the **&#8962; *your_user_name*** folder, select **Import**.
+2. In the **Import Notebooks** dialog box, select **URL** and import the notebook from `https://github.com/MicrosoftLearning/mslearn-synapse/raw/master/Allfiles/Labs/91/Databricks-Spark.dbc`.
+3. Select **&#8962; Home** and then open the **Analyze file-based data using Spark** notebook you just imported.
+4. Ensure that the notebook is attached to ***User Name's* cluster**, and follow the instructions it contains; running the cells it contains to explore data in files.
 
 ## Delete Azure Databricks resources
 

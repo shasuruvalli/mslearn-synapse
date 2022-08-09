@@ -54,7 +54,7 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
 > **Note**: In this exercise, you'll create a *single-node* cluster to minimize the compute resources used in the lab environment (in which resources may be constrained). In a production environment, you'd typically create a cluster with multiple worker nodes.
 
 1. In the Azure portal, browse to the **dp000-*xxxxxxx*** resource group that was created by the script you ran.
-2. Select the **databricks*xxxxxxx*** Azure Databricks Service resource.
+2. Select the **databricks_xxxxxxx_** Azure Databricks Service resource.
 3. In the **Overview** page for **databricks*xxxxxxx***, use the **Launch Workspace** button to open your Azure Databricks workspace in a new browser tab; signing in if prompted.
 4. If a **What's your current data project?** message is displayed, select **Finish** to close it. Then view the Azure Databricks workspace portal and note that the bar on the left side contains icons for the various tasks you can perform. The bar expands to show the names of the task categories.
 5. Select the **(+) Create** task, and then select **Cluster**.
@@ -62,11 +62,12 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
     **Note**: If a tip is displayed, use the **Got it** button to close it. This applies to any future tips that may be displayed as you navigate the workspace interface for the first time.
 
 6. In the **New Cluster** page, create a new cluster with the following settings:
-    - **Cluster name**: cluster
+    - **Cluster name**: *User_name's* cluster (the default cluster name)
     - **Cluster mode**: Single Node
     - **Databricks runtime version**: 10.4 LTS (Scala 2.12, Spark 3.2.1)
-    - **Autopilot options**: Terminate after **30** minutes of inactivity
+    - **Use Photon Acceleration**: Unselected
     - **Node type**: Standard_DS3_v2
+    - **Terminate after** *30* **minutes of inactivity**
 
 7. Wait for the cluster to be created. It may take a minute or two.
 
@@ -80,6 +81,9 @@ As in many Spark environments, Databricks supports the use of notebooks to combi
     - **Cluster**: cluster
 2. In the **Explore products** notebook, on the **&#128463; File** menu, select **Upload Data**.
 3. In the **Upload Data** dialog box, note the **DBFS Target Directory** to where the file will be uploaded. Then select the **Files** area, and in the **Open** dialog box, in the **File** box, type `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/90/adventureworks/products.csv` and select **Open**. Then, when the file has been uploaded, select **Next**.
+
+    > **Tip**: If your browser or operating system doesn't support entering a URL in the **File** box, download the CSV file to your computer and then upload it from the local folder where you saved it.
+
 4. In the **Access files from notebooks** pane, select the sample PySpark code and copy it to the clipboard. You will use it to load the data from the file into a DataFrame. Then select **Done**.
 5. In the **Explore products** notebook, in the empty code cell, paste the code you copied; which should look similar to this:
 

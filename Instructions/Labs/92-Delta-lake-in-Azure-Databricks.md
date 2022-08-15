@@ -1,14 +1,14 @@
 ---
 lab:
-    title: 'Analyze Files in Azure Databricks'
+    title: 'Use Delta Lake in Azure Databricks'
     module: 'Get Started with Azure Databricks'
 ---
 
-# Analyze Files in Azure Databricks
+# Use Delta Lake in Azure Databricks
 
-Azure Databricks is a Microsoft Azure-based version of the popular open-source Databricks platform. Azure Databricks is built on Apache Spark, and offers a highly scalable solution for data engineering and analysis tasks that involve working with data in files. One of the benefits of Spark is support for a wide range of programming languages, including Java, Scala, Python, and SQL; making Spark a very flexible solution for data processing workloads including data cleansing and manipulation, statistical analysis and machine learning, and data analytics and visualization.
+Delta Lake is an open source project to build a transactional data storage layer for Spark on top of a data lake. Delta Lake adds support for relational semantics for both batch and streaming data operations, and enables the creation of a *Lakehouse* architecture in which Apache Spark can be used to process and query data in tables that are based on underlying files in the data lake.
 
-This lab will take approximately **45** minutes to complete.
+This lab will take approximately **40** minutes to complete.
 
 ## Before you start
 

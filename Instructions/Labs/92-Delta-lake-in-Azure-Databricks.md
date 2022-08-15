@@ -75,13 +75,13 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
 As in many Spark environments, Databricks supports the use of notebooks to combine notes and interactive code cells that you can use to explore data.
 
 1. Expand the task bar on the left and select the **Workspace** tab. Then select the **Users** folder and in the **&#9662;** menu for the **&#8962; *your_user_name*** folder, select **Import**.
-2. In the **Import Notebooks** dialog box, select **URL** and import the notebook from `https://github.com/MicrosoftLearning/mslearn-synapse/raw/master/Allfiles/Labs/91/Data-Lake.dbc`.
+2. In the **Import Notebooks** dialog box, select **URL** and import the notebook from `https://github.com/MicrosoftLearning/mslearn-synapse/raw/master/Allfiles/Labs/91/Delta-Lake.dbc`.
 3. Select **&#8962; Home** and then open the **Explore Delta Lake** notebook you just imported.
-4. Ensure that the notebook is attached to ***User Name's* cluster**, and follow the instructions it contains; running the cells it contains to explore data in files.
+4. Ensure that the notebook is attached to ***User Name's* cluster**, and follow the instructions it contains; running the cells it contains to work with Delta Lake.
 
 ## Delete Azure Databricks resources
 
-Now you've finished exploring Azure Databricks, you must delete the resources you've created to avoid unnecessary Azure costs and free up capacity in your subscription.
+Now you've finished exploring Delta Lake in Azure Databricks, you must delete the resources you've created to avoid unnecessary Azure costs and free up capacity in your subscription.
 
 1. Close the Azure Databricks workspace browser tab and return to the Azure portal.
 2. On the Azure portal, on the **Home** page, select **Resource groups**.

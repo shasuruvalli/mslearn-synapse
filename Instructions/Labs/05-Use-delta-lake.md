@@ -124,7 +124,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
     deltaTable.toDF().show(10)
     ```
 
-    The data is loaded into a **deltaTable** object and updated. You can see the update reflected in the query results.
+    The data is loaded into a **DeltaTable** object and updated. You can see the update reflected in the query results.
 
 4. Add another new code cell with the following code and run it:
 
@@ -133,7 +133,7 @@ The script provisions an Azure Synapse Analytics workspace and an Azure Storage 
     new_df.show(10)
     ```
 
-    The code loads the delta table data into a data frame from its location in the data lake, verifying that the change you made via a **deltaTable** object ihas been persisted.
+    The code loads the delta table data into a data frame from its location in the data lake, verifying that the change you made via a **DeltaTable** object has been persisted.
 
 5. Modify the code you just ran as follows, specifying the option to use the *time travel* feature of delta lake to view a previous version of the data.
 
@@ -260,11 +260,11 @@ So far you've worked with delta tables by loading data from the folder containin
     SELECT * FROM Products;
     ```
 
-    Observe that the new catalog table was created for the existing Delta Lake table folder, which reflects the changes that were made previously. 
+    Observe that the new catalog table was created for the existing Delta Lake table folder, which reflects the changes that were made previously.
 
 ## Use delta tables for streaming data
 
-Delta lake supports streaming data. Delta tables can be a *sink* or a *source* for data streams created using the Spark Structured Streaming API. In this example, you'll use a delta table as a sunk for some streaming data in a simulated internet of things (IoT) scenario.
+Delta lake supports streaming data. Delta tables can be a *sink* or a *source* for data streams created using the Spark Structured Streaming API. In this example, you'll use a delta table as a sink for some streaming data in a simulated internet of things (IoT) scenario.
 
 1. Return to the **Notebook 1** tab and add a new code cell. Then, in the new cell, add the following code and run it:
 

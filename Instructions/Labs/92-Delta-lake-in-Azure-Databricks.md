@@ -1,16 +1,14 @@
 ---
 lab:
-    title: 'Explore Azure Databricks'
+    title: 'Analyze Files in Azure Databricks'
     module: 'Get Started with Azure Databricks'
 ---
 
-# Explore Azure Databricks
+# Analyze Files in Azure Databricks
 
-Azure Databricks is a Microsoft Azure-based version of the popular open-source Databricks platform.
+Azure Databricks is a Microsoft Azure-based version of the popular open-source Databricks platform. Azure Databricks is built on Apache Spark, and offers a highly scalable solution for data engineering and analysis tasks that involve working with data in files. One of the benefits of Spark is support for a wide range of programming languages, including Java, Scala, Python, and SQL; making Spark a very flexible solution for data processing workloads including data cleansing and manipulation, statistical analysis and machine learning, and data analytics and visualization.
 
-Similarly to Azure Synapse Analytics, an Azure Databricks *workspace* provides a central point for managing Databricks clusters, data, and resources on Azure.
-
-This lab will take approximately **30** minutes to complete.
+This lab will take approximately **45** minutes to complete.
 
 ## Before you start
 
@@ -39,13 +37,13 @@ In this exercise, you'll use a script to provision a new Azure Databricks worksp
 5. After the repo has been cloned, enter the following commands to change to the folder for this lab and run the **setup.ps1** script it contains:
 
     ```
-    cd dp-000/Allfiles/Labs/90
+    cd dp-000/Allfiles/Labs/92
     ./setup.ps1
     ```
 
 6. If prompted, choose which subscription you want to use (this will only happen if you have access to multiple Azure subscriptions).
 
-7. Wait for the script to complete - this typically takes around 5 minutes, but in some cases may take longer. While you are waiting, review the [What is Azure Databricks?](https://docs.microsoft.com/azure/databricks/scenarios/what-is-azure-databricks) article in the Azure Databricks documentation.
+7. Wait for the script to complete - this typically takes around 5 minutes, but in some cases may take longer. While you are waiting, review the [What is Databricks Data Science & Engineering?](https://docs.microsoft.com/azure/databricks/scenarios/what-is-azure-databricks-ws) article in the Azure Databricks documentation.
 
 ## Create a cluster
 
@@ -72,76 +70,14 @@ Azure Databricks is a distributed processing platform that uses Apache Spark *cl
 
 7. Wait for the cluster to be created. It may take a minute or two.
 
-## Use Spark to analyze a data file
+## Explore data using a notebook
 
 As in many Spark environments, Databricks supports the use of notebooks to combine notes and interactive code cells that you can use to explore data.
 
-1. Use the **(+) Create** task to create a **Notebook** with the following properties:
-    - **Name**: Explore products
-    - **Default language**: Python
-    - **Cluster**: *User Name's* cluster
-2. In the **Explore products** notebook, on the **&#128463; File** menu, select **Upload Data**.
-3. In the **Upload Data** dialog box, note the **DBFS Target Directory** to where the file will be uploaded. Then select the **Files** area, and in the **Open** dialog box, in the **File** box, type `https://raw.githubusercontent.com/MicrosoftLearning/mslearn-synapse/master/Allfiles/Labs/90/adventureworks/products.csv` and select **Open**. Then, when the file has been uploaded, select **Next**.
-
-    > **Tip**: If your browser or operating system doesn't support entering a URL in the **File** box, download the CSV file to your computer and then upload it from the local folder where you saved it.
-
-4. In the **Access files from notebooks** pane, select the sample PySpark code and copy it to the clipboard. You will use it to load the data from the file into a DataFrame. Then select **Done**.
-5. In the **Explore products** notebook, in the empty code cell, paste the code you copied; which should look similar to this:
-
-    ```python
-    df1 = spark.read.format("csv").option("header", "true").load("dbfs:/FileStore/shared_uploads/user@outlook.com/products_1_.csv")
-    ```
-
-6. Use the **&#9656; Run Cell** menu option at the top-right of the cell to run it, starting and attaching the cluster if prompted.
-7. Wait for the Spark job run by the code to complete. The code has created a *dataframe* object named **df1** from the data in the file you uploaded.
-8. Under the existing code cell, use the **+** icon to add a new code cell. Then in the new cell, enter the following code:
-
-    ```python
-    display(df1)
-    ```
-
-9. Use the **&#9656; Run Cell** menu option at the top-right of the new cell to run it. This code displays the contents of the dataframe, which should look similar to this:
-
-    | ProductID | ProductName | Category | ListPrice |
-    | -- | -- | -- | -- |
-    | 771 | Mountain-100 Silver, 38 | Mountain Bikes | 3399.9900 |
-    | 772 | Mountain-100 Silver, 42 | Mountain Bikes | 3399.9900 |
-    | ... | ... | ... | ... |
-
-10. Under the table of results, use the **.&#953;&#10073;** (*Display as bar chart*) button to view the results as a chart, and then use the **Plot Options...** button to apply the following options:
-    - **Keys**: Category
-    - **Values**: ProductID
-    - **Aggregation**: COUNT
-    - **Grouped**: Selected
-    - **Display type**: Bar chart
-
-    The resulting chart shows the count of products in each category, like this:
-
-    ![A bar chart showing product counts by category](./images/databricks-chart.png)
-
-## Create and query a database table
-
-While many data analysis are comfortable using languages like Python or Scala to work with data in files, a lot of data analytics solutions are built on relational databases; in which data is stored in tables and manipulated using SQL.
-
-1. In the **Explore products** notebook, under the chart output from the previously run code cell, use the **+** icon to add a new cell.
-2. Enter and run the following code in the new cell:
-
-    ```python
-    df1.write.saveAsTable("products")
-    ```
-
-3. When the cell has completed, add a new cell under it with the following code:
-
-    ```sql
-    %sql
-
-    SELECT ProductName, ListPrice
-    FROM products
-    WHERE Category = 'Touring Bikes';
-    ```
-
-4. Run the new cell, which contains SQL code to return the name and price of products in the *Touring Bikes* category.
-5. In the tab on the left, select the **Data** task, and verify that the **products** table has been created in the default database (which is unsurprisingly named **default**). It's possible to use Spark code to create custom databases and a schema of relational tables that data analysts can use to explore data and generate analytical reports.
+1. Expand the task bar on the left and select the **Workspace** tab. Then select the **Users** folder and in the **&#9662;** menu for the **&#8962; *your_user_name*** folder, select **Import**.
+2. In the **Import Notebooks** dialog box, select **URL** and import the notebook from `https://github.com/MicrosoftLearning/mslearn-synapse/raw/master/Allfiles/Labs/91/Databricks-Spark.dbc`.
+3. Select **&#8962; Home** and then open the **Analyze file-based data using Spark** notebook you just imported.
+4. Ensure that the notebook is attached to ***User Name's* cluster**, and follow the instructions it contains; running the cells it contains to explore data in files.
 
 ## Delete Azure Databricks resources
 

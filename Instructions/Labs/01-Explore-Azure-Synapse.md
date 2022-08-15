@@ -107,8 +107,8 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
     - **Row delimiter**: Line feed (\n)
     - **First row as header**: Selected
     - **Compression type**: None
-7. On the **Target** step, in the **Dataset** substep, select the following settings:
-    - **Target type**: Azure Data Lake Storage Gen 2
+7. On the **Destination** step, in the **Dataset** substep, select the following settings:
+    - **Destination type**: Azure Data Lake Storage Gen 2
     - **Connection**: *Select the existing connection to your data lake store (this was created for you when you created the workspace).*
 8. After selecting the connection, on the **Target/Dataset** step, ensure the following settings are selected, and then select **Next >**:
     - **Folder path**: files/product_data

@@ -67,7 +67,7 @@ In this exercise, you'll use a combination of a PowerShell script and an ARM tem
 5. View the **Develop** page, which is currently empty. This is where you can define scripts and other assets used to develop data processing solutions.
 6. View the **Integrate** page, which is also empty. You use this page to manage data ingestion and integration assets; such as pipelines to transfer and transform data between data sources.
 7. View the **Monitor** page. This is where you can observe data processing jobs as they run and view their history.
-8. View the **Manage** page. This is where you manage the pools, runtimes, and other assets used in you Azure Synapse workspace. View each of the tabs in the **Analytics pools** section and note that your workspace includes the following pools:
+8. View the **Manage** page. This is where you manage the pools, runtimes, and other assets used in your Azure Synapse workspace. View each of the tabs in the **Analytics pools** section and note that your workspace includes the following pools:
     - **SQL pools**:
         - **Built-in**: A *serverless* SQL pool that you can use on-demand to explore or process data in a data lake by using SQL commands.
         - **sql*xxxxxxx***: A *dedicated* SQL pool that hosts a relational data warehouse database.
@@ -107,16 +107,16 @@ One of the key tasks you can perform with Azure Synapse Analytics is to define *
     - **Row delimiter**: Line feed (\n)
     - **First row as header**: Selected
     - **Compression type**: None
-7. On the **Target** step, in the **Dataset** substep, select the following settings:
-    - **Target type**: Azure Data Lake Storage Gen 2
+7. On the **Destination** step, in the **Dataset** substep, select the following settings:
+    - **Destination type**: Azure Data Lake Storage Gen 2
     - **Connection**: *Select the existing connection to your data lake store (this was created for you when you created the workspace).*
-8. After selecting the connection, on the **Target/Dataset** step, ensure the following settings are selected, and then select **Next >**:
+8. After selecting the connection, on the **Destination/Dataset** step, ensure the following settings are selected, and then select **Next >**:
     - **Folder path**: files/product_data
     - **File name**: products.csv
     - **Copy behavior**: None
     - **Max concurrent connections**: *Leave blank*
     - **Block size (MB)**: *Leave blank*
-9. On the **Target** step, in the **Configuration** substep, on the **File format settings** page, ensure that the following properties are selected. Then select **Next >**:
+9. On the **Destination** step, in the **Configuration** substep, on the **File format settings** page, ensure that the following properties are selected. Then select **Next >**:
     - **File format**: DelimitedText
     - **Column delimiter**: Comma (,)
     - **Row delimiter**: Line feed (\n)

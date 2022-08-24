@@ -180,7 +180,7 @@ while ($stop -ne 1){
       Remove-AzCosmosDBAccount -ResourceGroupName $resourceGroupName -Name $cosmosDB -AsJob | Out-Null
       $tried_cosmos.Add($Region)
       $locations = $locations | Where-Object {$_.Location -notin $tried_cosmos}
-      if ($locations.length -gt 0)
+      if ($locations.Count -ne 1)
       {
         $rand = (0..$($locations.Count - 1)) | Get-Random
         $Region = $locations.Get($rand).Location

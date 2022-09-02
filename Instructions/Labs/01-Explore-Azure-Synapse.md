@@ -345,60 +345,26 @@ So far you've seen some techniques for exploring and processing file-based data 
 
 Azure Synapse Data Explorer provides a runtime that you can use to store and query data by using Kusto Query Language (KQL). Kusto is optimized for data that includes a time series component, such as realtime data from log files or IoT devices.
 
-### Create a Data Explorer database
+### Create a Data Explorer database and ingest data into a table
 
 1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool row and then use its **&#9655;** icon to resume it.
-2. While waiting for the pool to start, on the **Data** page, on the **Linked** tab, browse to the **files** file system in your **synapse*xxxxxxx*** Azure Data Lake Storage Gen2 resource and view the contents of the **sales_data** folder; which should contain a file named **sales.csv**. You will ingest the data in this file into a Data Explorer database for analysis.
-3. Return to the **Manage** page and view the **Data Explorer pools** tab, and  continue waiting for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
-4. When the Data Explorer pool has started, return to the **Data** page; and on the **Workspace** tab, expand **Data Explorer Databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
-5. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **sales-data**.
-6. In Synapse Studio, wait for the database to be created (a notification will be displayed), and then in the **...** menu for the new **sales-data** database, select **Open in Azure Data Explorer** (reauthenticating if prompted).
-7. In the new browser tab containing Azure Data Explorer, on the **Data** tab, select **Ingest data**.
-8. In the **Destination** page, select the following settings:
-    - **Cluster**: *The **adxxxxxxxx** Data Explorer pool in your Azure Synapse workspace*
-    - **Database**: sales-data
-    - **Table**: Create a new table named **sales**
-9. Select **Next: Source** and on the **Source** page, select the following options:
-    - **Source type**: From ADLS Gen2 container
-    - **Ingestion type**: One-time + continuous
-    - **Select source**: Select container
-    - **Storage subscription**: *Select your Azure subscription*
-    - **Storage account**: *Select your **datalakexxxxxxx** storage account*
-    - **Container**: files
-    - **Sample Size**: 1-5,000
-    - **File Filters**: *Expand*
-        - **Folder path**: sales_data/
-        - **File extension**: .csv
-    - **Schema defining file**: sales_data/sales.csv
-
-10. Select **Next: Schema** and on the **Schema** page, ensure the following settings are correct:
-    - **Compression type**: Uncompressed
-    - **Data format**: CSV
-    - **Ignore the first record**:  selected
-    - **Mapping**: sales_mapping
-11. Review the columns and the data types that have been identified for them. Then select **Next: Start Ingestion**.
-12. When ingestion is complete, select **Close**.
-13. In Azure Data Explorer, on the **Query** tab, ensure that the **sales-data** database is selected and then in the query pane, enter the following query.
-
-    ```kusto
-    sales
-    ```
-
-14. On the toolbar, use the **&#9655; Run** button to run the query, and review the results, which should look similar to this:
-
-    | SalesOrderNumber | SalesOrderLineItem | OrderDate | CustomerName | EmailAddress | Item | Quantity | UnitPrice | Tax Amount |
-    | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-    | SO43710 | 1 | 2019-07-01 00:00:00.000 | Christy Zhu | christy12@adventure-works.com | Mountain-100 Silver, 44 | 1 | 3,399.99 | 271.9992 |
-    | ... | ... | ... | ... | ... | ... | ... | ... | ... |
-
-    If your results match this, you have successfully created the **sales** table from the data in the file.
+2. Waiting for the pool to start, It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
+3. When the Data Explorer pool has started, view the **Data** page; and on the **Workspace** tab, expand **Data Explorer Databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
+4. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **sales-data**.
+5. In Synapse Studio, wait for the database to be created (a notification will be displayed).
+6. Switch to the **Develop** page, and in the **KQL scripts** list, select **ingest-data**. When the scipt opens, note that it contains two statements:
+    - A `.create table` statement to create a table named **sales**.
+    - An `.ingest into table` statement to load data into the table from an HTTP source.
+7. In the **ingest-data** pane, in the **Connect to** list, select your **adx*xxxxxxx*** pool, and in the **Database** list, select **sales-data**.
+8. In the script, highlight the `.create table` statement, and then on the toolbar, use the **&#9655; Run** button to run the selected code, which creates a table named **sales**.
+9. After the table has been created, highlight the `.ingest into table` statement and use the **&#9655; Run** button to run it and ingest data into the table.
 
 > **Note**: In this example, you imported a very small amount of batch data from a file, which is fine for the purposes of this exercise. In reality, you can use Data Explorer to analyze much larger volumes of data; including realtime data from a streaming source such as Azure Event Hubs.
 
-### Use Kusto query language to query the table in Synapse Studio
+### Use Kusto query language to query the table
 
-1. Close the Azure Data Explorer browser tab and return to the tab containing Synapse Studio.
-2. On the **Data** page, expand the **sales-data** database and its **Tables** folder. Then in the **...** menu for the **sales** table, select **New KQL script** > **Take 1000 rows**.
+1. Switch back to the **Data** page and in the **...** menu for the **sales-data** database, select **Refresh**.
+2. Expand the **sales-data** database's **Tables** folder. Then in the **...** menu for the **sales** table, select **New KQL script** > **Take 1000 rows**.
 3. Review the generated query and its results. The query should contain the following code:
 
     ```kusto

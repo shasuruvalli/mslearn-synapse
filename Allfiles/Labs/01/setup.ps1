@@ -194,4 +194,7 @@ Get-ChildItem "./files/*.csv" -File | Foreach-Object {
     Set-AzStorageBlobContent -File $_.FullName -Container "files" -Blob $blobPath -Context $storageContext
 }
 
+# Create KQL script
+New-AzSynapseKqlScript -WorkspaceName $synapseWorkspace -DefinitionFile "./files/ingest-data.kql"
+
 write-host "Script completed at $(Get-Date)"

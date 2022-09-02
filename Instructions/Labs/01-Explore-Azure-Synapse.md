@@ -348,7 +348,7 @@ Azure Synapse Data Explorer provides a runtime that you can use to store and que
 ### Create a Data Explorer database and ingest data into a table
 
 1. In Synapse Studio, on the **Manage** page, in the **Data Explorer pools** section, select the **adx*xxxxxxx*** pool row and then use its **&#9655;** icon to resume it.
-2. Waiting for the pool to start, It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
+2. Wait for the pool to start. It can take some time. Use the **&#8635; Refresh** button to check its status periodically. The status will show as **online** when it is ready.
 3. When the Data Explorer pool has started, view the **Data** page; and on the **Workspace** tab, expand **Data Explorer Databases** and verify that **adx*xxxxxxx*** is listed (use **&#8635;** icon at the top-left of the page to refresh the view if necessary)
 4. In the **Data** pane, use the **&#65291;** icon to create a new **Data Explorer database** in the **adx*xxxxxxx*** pool with the name **sales-data**.
 5. In Synapse Studio, wait for the database to be created (a notification will be displayed).

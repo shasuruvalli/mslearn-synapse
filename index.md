@@ -8,8 +8,6 @@ layout: home
 
 Links to the hands-on exercises are listed below.
 
-## Labs
-
 {% assign labs = site.pages | where_exp:"page", "page.url contains '/Instructions/Labs'" %}
 | Exercise |
 | --- | 

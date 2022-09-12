@@ -4,15 +4,15 @@ permalink: index.html
 layout: home
 ---
 
-# Content Directory
+# Azure Synapse Analytics Exercises
 
-Hyperlinks to each of the lab exercises and demos are listed below.
+These hands-on exercises are designed to support training content on [Microsoft Learn](https://docs.microsoft.com/training/).
 
-## Labs
+You'll need an Azure subscription in which you have administrative access to complete these exercises.
 
 {% assign labs = site.pages | where_exp:"page", "page.url contains '/Instructions/Labs'" %}
-| Module | Lab |
-| --- | --- | 
-{% for activity in labs  %}| {{ activity.lab.module }} | [{{ activity.lab.title }}{% if activity.lab.type %} - {{ activity.lab.type }}{% endif %}]({{ site.github.url }}{{ activity.url }}) |
+| Exercise |
+| --- | 
+{% for activity in labs  %}| [{{ activity.lab.title }}{% if activity.lab.type %} - {{ activity.lab.type }}{% endif %}]({{ site.github.url }}{{ activity.url }}) |
 {% endfor %}
 
